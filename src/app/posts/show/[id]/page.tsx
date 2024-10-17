@@ -14,7 +14,6 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 	const {data: id} = usePermissions<number>()
 	const {query} = useShow<IPostName>({
 		id: postId,
-		meta: {headers: {Authorization: userInfo?.auth}},
 	})
 	const {data, isLoading} = query
 

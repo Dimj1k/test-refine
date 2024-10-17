@@ -1,13 +1,10 @@
 'use client'
 
 import {Create, SaveButton, useForm} from '@refinedev/antd'
-import {useGetIdentity} from '@refinedev/core'
 import {Form, Input} from 'antd'
-import {UserIdentity} from '@/components/header'
 
 export default function CategoryCreate() {
-	const {data: userInfo} = useGetIdentity<UserIdentity>()
-	const {formProps, saveButtonProps} = useForm({meta: {headers: {Authorization: userInfo?.auth}}})
+	const {formProps, saveButtonProps} = useForm()
 
 	return (
 		<Create
@@ -35,7 +32,6 @@ export default function CategoryCreate() {
 					name="text">
 					<Input.TextArea spellCheck={true} placeholder="Текст" />
 				</Form.Item>
-				<Form.Item></Form.Item>
 			</Form>
 		</Create>
 	)

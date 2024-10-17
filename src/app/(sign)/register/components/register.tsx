@@ -22,8 +22,8 @@ const {Title, Text} = Typography
 export const RegisterPage: React.FC = () => {
 	const {mutate: registeration, isLoading} = useRegister()
 	return (
-		<Layout style={{minHeight: '100vh', padding: '16px 0'}}>
-			<Row justify="center" align="middle">
+		<Layout>
+			<Row justify="center" align="middle" style={{minHeight: '100vh', padding: '16px 0'}}>
 				<Col xs={22}>
 					<HeaderAntd />
 					<Card

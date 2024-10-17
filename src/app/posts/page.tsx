@@ -1,16 +1,12 @@
 'use client'
 
 import {DeleteButton, EditButton, List, ShowButton, useTable} from '@refinedev/antd'
-import {useGetIdentity, usePermissions} from '@refinedev/core'
+import {usePermissions} from '@refinedev/core'
 import {Space, Table} from 'antd'
-import {UserIdentity} from '@/components/header'
 
 export default function CategoryList() {
-	const {data: userInfo} = useGetIdentity<UserIdentity>()
 	const {data: id} = usePermissions<number>()
-	const {tableProps} = useTable<IPostTitle>({
-		meta: {headers: {Authorization: userInfo?.auth}},
-	})
+	const {tableProps} = useTable<IPostTitle>({})
 	return (
 		<List>
 			<Table<IPostTitle> {...tableProps} rowKey="id">
@@ -51,7 +47,6 @@ export default function CategoryList() {
 										hideText
 										size="small"
 										recordItemId={recordId}
-										meta={{headers: {Authorization: userInfo?.auth}}}
 										invalidates={['list']}
 										confirmTitle="Вы уверены?"
 										confirmOkText="Да"
