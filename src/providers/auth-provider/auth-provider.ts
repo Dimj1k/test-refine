@@ -1,7 +1,7 @@
 'use client'
 
 import type {AuthProvider} from '@refinedev/core'
-import axios from 'axios'
+import axios, {isAxiosError} from 'axios'
 import Cookies from 'js-cookie'
 import {getApi} from '../data-provider'
 import {IAuthSuccessResponce, IRegister, UserIdentity} from './interfaces'
@@ -113,6 +113,9 @@ export const authProvider: AuthProvider = {
 		const auth = Cookies.get('auth')
 		if (auth) {
 			try {
+				if (globData.dataIndentity) {
+					return globData.dataIndentity
+				}
 				const res = await mutex.runExclusive(async () => {
 					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
 						headers: {Authorization: auth},
@@ -158,6 +161,9 @@ export const authProvider: AuthProvider = {
 				successNotification: {message: 'Вы успешно зарегистрировались'},
 			}
 		} catch (e) {
+			if (isAxiosError(e)) {
+				return {error: new Error(e.response?.data.message), success: false}
+			}
 			return {error: e as Error, success: false}
 		}
 	},
