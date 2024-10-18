@@ -14,11 +14,13 @@ export const axiosJson = axios.create({
 	timeout: 5000,
 })
 const mutex = new Mutex()
-const globData: {data: UserIdentity | null; idTimeoutClear: ReturnType<typeof setTimeout> | null} =
-	{
-		data: null,
-		idTimeoutClear: null,
-	}
+const globDataIdentity: {
+	data: UserIdentity | null
+	idTimeoutClear: ReturnType<typeof setTimeout> | null
+} = {
+	data: null,
+	idTimeoutClear: null,
+}
 export const authProvider: AuthProvider = {
 	login: async function ({email, password, remember}) {
 		const token = Cookies.get('auth')
@@ -115,19 +117,19 @@ export const authProvider: AuthProvider = {
 					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
 						headers: {Authorization: auth},
 					})
-					globData.data = {...data.result, auth}
+					globDataIdentity.data = {...data.result, auth}
 					mutex.cancel()
-					return globData.data
+					return globDataIdentity.data
 				})
 				return res
 			} catch {
-				if (!globData.idTimeoutClear) {
-					globData.idTimeoutClear = setTimeout(() => {
-						globData.data = null
-						globData.idTimeoutClear = null
+				if (!globDataIdentity.idTimeoutClear) {
+					globDataIdentity.idTimeoutClear = setTimeout(() => {
+						globDataIdentity.data = null
+						globDataIdentity.idTimeoutClear = null
 					}, 1000)
 				}
-				return globData.data
+				return globDataIdentity.data
 			}
 		}
 		return null
