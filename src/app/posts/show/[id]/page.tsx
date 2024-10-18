@@ -7,24 +7,23 @@ import {IPostName} from '../../page'
 import {CreateComment} from './create-comment'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
-import {AxiosError} from 'axios'
-import {IErrorResponce, UserIdentity} from '@/providers/auth-provider/interfaces'
+import {UserIdentity} from '@/providers/auth-provider/interfaces'
 
 const {Title, Text} = Typography
 
 export default function PostShow({params: {id: postId}}: {params: {id: string}}) {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
 	const {data: id} = usePermissions<number>()
-	const {query} = useShow<IPostName, AxiosError<IErrorResponce> & {statusCode: number}>({
+	const {query} = useShow<IPostName>({
 		id: postId,
 	})
-	const {data, isLoading, error} = query
+	const {data, isLoading, isError} = query
 	const router = useRouter()
 	useEffect(() => {
-		if (error?.status === 404) {
+		if (isError) {
 			router.replace('/posts')
 		}
-	}, [error])
+	}, [isError])
 
 	const record = data?.data
 	if (!record)

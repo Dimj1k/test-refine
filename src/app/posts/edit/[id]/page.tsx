@@ -1,34 +1,26 @@
 'use client'
 
 import {DeleteButton, Edit, ListButton, RefreshButton, SaveButton, useForm} from '@refinedev/antd'
-import {useGetIdentity, useOne} from '@refinedev/core'
+import {useGetIdentity} from '@refinedev/core'
 import {Form, Input, Skeleton} from 'antd'
+import {UserIdentity} from '@/providers/auth-provider/interfaces'
 import {IPostName} from '../../page'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
-import {IErrorResponce, UserIdentity} from '@/providers/auth-provider/interfaces'
-import {AxiosError} from 'axios'
 
 export default function PostEdit({params: {id: postId}}: {params: {id: string}}) {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
-	const {formProps, saveButtonProps} = useForm()
-	const {data, isLoading, error} = useOne<
-		IPostName,
-		AxiosError<IErrorResponce> & {statusCode: number}
-	>({
-		resource: 'posts',
-		id: postId,
-	})
+	const {formProps, saveButtonProps, formLoading, query} = useForm<IPostName>()
+	const initialValues = formProps.initialValues as IPostName | undefined
 	const router = useRouter()
-	const record = data?.data
 	useEffect(() => {
-		if (record && record.author.id !== userInfo?.id) {
+		if (initialValues && initialValues.author.id !== userInfo?.id) {
 			router.back()
 		}
-		if (error?.status === 404) {
+		if (query?.isError) {
 			router.replace('/posts')
 		}
-	}, [record, error])
+	}, [initialValues, query?.isError])
 
 	return (
 		<Edit
@@ -50,11 +42,14 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 					</>
 				)
 			}}>
-			<Skeleton loading={isLoading}>
+			<Skeleton loading={formLoading}>
 				<Form
 					{...formProps}
 					layout="vertical"
-					initialValues={{title: record?.name, text: record?.text}}>
+					initialValues={{
+						title: formProps.initialValues?.name,
+						text: formProps.initialValues?.text,
+					}}>
 					<Form.Item label={'Заголовок поста'} name={'title'}>
 						<Input />
 					</Form.Item>
