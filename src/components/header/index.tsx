@@ -5,14 +5,10 @@ import type {RefineThemedLayoutV2HeaderProps} from '@refinedev/antd'
 import {useGetIdentity} from '@refinedev/core'
 import {Layout as AntdLayout, Space, Switch, theme, Typography} from 'antd'
 import React, {useContext} from 'react'
+import {UserIdentity} from '@/providers/auth-provider/interfaces'
 
 const {Text} = Typography
 const {useToken} = theme
-export type UserIdentity = {
-	name: string
-	id: number
-	auth: string
-}
 
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({sticky = true}) => {
 	const {token} = useToken()

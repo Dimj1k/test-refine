@@ -3,20 +3,29 @@ export interface IMessage {
 }
 
 export interface IAuthSuccessResponce extends IMessage {
-	result: Result
+	result: {
+		user: {
+			id: number
+			name: string
+		}
+		access_token: string
+		token_type: string
+	}
 }
 
 export interface IErrorResponce extends IMessage {
 	errors: {property_name: string}[]
 }
 
-interface Result {
-	user: User
-	access_token: string
-	token_type: string
+export type UserIdentity = {
+	name: string
+	id: number
+	auth: string
 }
 
-interface User {
-	id: number
+export interface IRegister {
 	name: string
+	email: string
+	password: string
+	password_confirmation: this['password']
 }

@@ -15,6 +15,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
     "@ant-design/nextjs-registry": "^1.0.0",
+    "@reduxjs/toolkit": "^2.3.0",
     "@refinedev/antd": "^5.37.4",
     "@refinedev/cli": "^2.16.21",
     "@refinedev/core": "^4.47.1",
@@ -24,6 +25,7 @@
     "@refinedev/react-hook-form": "^4.9.0",
     "@refinedev/simple-rest": "^5.0.1",
     "antd": "^5.0.5",
+    "async-mutex": "^0.5.0",
     "axios": "^1.7.7",
     "js-cookie": "^3.0.5",
     "next": "^14.1.0",

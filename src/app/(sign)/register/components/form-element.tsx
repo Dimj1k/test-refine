@@ -1,3 +1,5 @@
+'use client'
+import {useRegister} from '@refinedev/core'
 import {Button, Flex, Form, FormProps, Input, InputProps} from 'antd'
 import {createContext, FormEvent, useContext, useMemo} from 'react'
 
@@ -45,9 +47,7 @@ const NormalizeInput: React.FC<NormalizeInputProps> = ({normalizeBy, typeInput, 
 	}
 }
 
-export const RegisterForm: React.FC<
-	Omit<FormProps, 'form'> & {onFinish: FormProps['onFinish']}
-> = ({onFinish, ...props}) => {
+export const RegisterForm: React.FC<FormProps> = props => {
 	const isMobile = useMemo(() => {
 		if (typeof window != 'undefined') {
 			const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
@@ -55,9 +55,15 @@ export const RegisterForm: React.FC<
 		}
 		return false
 	}, [])
+	const {mutate: onFinish, isLoading} = useRegister()
 	return (
 		<MobileContext.Provider value={isMobile}>
-			<Form layout="vertical" onFinish={onFinish} requiredMark={false} {...props}>
+			<Form
+				layout="vertical"
+				onFinish={onFinish}
+				requiredMark={false}
+				disabled={isLoading}
+				{...props}>
 				<Item
 					name="name"
 					label="Ваше имя"
@@ -137,11 +143,4 @@ export const RegisterForm: React.FC<
 			</Form>
 		</MobileContext.Provider>
 	)
-}
-
-export interface IRegister {
-	name: string
-	email: string
-	password: string
-	password_confirmation: this['password']
 }

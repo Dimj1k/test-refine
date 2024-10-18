@@ -5,11 +5,10 @@ import {useGetIdentity, usePermissions, useShow} from '@refinedev/core'
 import {Divider, Typography} from 'antd'
 import {IPostName} from '../../page'
 import {CreateComment} from './create-comment'
-import {UserIdentity} from '@/components/header'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {AxiosError} from 'axios'
-import {IErrorResponce} from '@/providers/auth-provider/interfaces'
+import {IErrorResponce, UserIdentity} from '@/providers/auth-provider/interfaces'
 
 const {Title, Text} = Typography
 

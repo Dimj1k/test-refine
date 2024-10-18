@@ -1,9 +1,9 @@
-import {Flex, Space, Typography} from 'antd'
+import {Flex, Space} from 'antd'
 import Link from 'next/link'
 import {AppIcon} from '@/components/app-icon'
-import {memo} from 'react'
+import Title from 'antd/es/typography/Title'
 
-export const HeaderAntd = memo(() => {
+export const HeaderAntd = () => {
 	return (
 		<Flex justify="center" style={{marginBottom: '32px', fontSize: '20px'}}>
 			<Link href="/">
@@ -11,11 +11,11 @@ export const HeaderAntd = memo(() => {
 					<div style={{height: '24px', width: '24px', color: 'rgb(22, 119, 255)'}}>
 						<AppIcon />
 					</div>
-					<Typography.Title style={{fontSize: 'inherit', marginBottom: '0', fontWeight: 700}}>
+					<Title style={{fontSize: 'inherit', marginBottom: '0', fontWeight: 700}}>
 						Refine Project
-					</Typography.Title>
+					</Title>
 				</Space>
 			</Link>
 		</Flex>
 	)
-})
+}

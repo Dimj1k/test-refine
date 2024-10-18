@@ -3,7 +3,7 @@
 import {DataProvider} from '@refinedev/core'
 import {authProvider, axiosJson} from '../auth-provider'
 import {AxiosError} from 'axios'
-import {UserIdentity} from '@/components/header'
+import {UserIdentity} from '../auth-provider/interfaces'
 
 type MethodTypes = 'get' | 'delete' | 'head' | 'options'
 type MethodTypesWithBody = 'post' | 'put' | 'patch'

@@ -4,10 +4,9 @@ import {DeleteButton, Edit, ListButton, RefreshButton, SaveButton, useForm} from
 import {useGetIdentity, useOne} from '@refinedev/core'
 import {Form, Input, Skeleton} from 'antd'
 import {IPostName} from '../../page'
-import {UserIdentity} from '@/components/header'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
-import {IErrorResponce} from '@/providers/auth-provider/interfaces'
+import {IErrorResponce, UserIdentity} from '@/providers/auth-provider/interfaces'
 import {AxiosError} from 'axios'
 
 export default function PostEdit({params: {id: postId}}: {params: {id: string}}) {

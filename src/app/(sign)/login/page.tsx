@@ -1,11 +1,11 @@
 import {AuthPage} from '@components/auth-page'
-import {titleStyle} from '../register/components'
 import Title from 'antd/es/typography/Title'
 import Text from 'antd/es/typography/Text'
 import {Link} from '@refinedev/core'
 import {Suspense} from 'react'
 import {RememberMe} from './remember-me'
 import {Metadata} from 'next'
+import {titleStyle} from '../inline-style'
 
 export const metadata: Metadata = {
 	title: 'Вход',

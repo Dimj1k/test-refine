@@ -4,8 +4,9 @@ import type {AuthProvider} from '@refinedev/core'
 import axios from 'axios'
 import Cookies from 'js-cookie'
 import {getApi} from '../data-provider'
-import {IAuthSuccessResponce} from './interfaces'
-import {IRegister} from '@app/(sign)/register/components/form-element'
+import {IAuthSuccessResponce, IRegister, UserIdentity} from './interfaces'
+import {rtkStore, userInfoSlice} from '../rtk'
+import {Mutex} from 'async-mutex'
 
 export const axiosJson = axios.create({
 	headers: {Accept: 'application/json'},
@@ -13,7 +14,7 @@ export const axiosJson = axios.create({
 	responseType: 'json',
 	timeout: 5000,
 })
-
+const mutex = new Mutex()
 export const authProvider: AuthProvider = {
 	login: async function ({email, password, remember}) {
 		const token = Cookies.get('auth')
@@ -32,6 +33,7 @@ export const authProvider: AuthProvider = {
 			} = await axiosJson.post<IAuthSuccessResponce>('login', {
 				email,
 				password,
+				remember,
 			})
 			if (remember) {
 				Cookies.set('auth', concatToken(token_type, access_token), {
@@ -80,7 +82,7 @@ export const authProvider: AuthProvider = {
 			}
 		}
 		try {
-			await axiosJson.get('me', {headers: {Authorization: token}})
+			await authProvider.getIdentity!()
 			return {
 				authenticated: true,
 			}
@@ -96,20 +98,32 @@ export const authProvider: AuthProvider = {
 	getPermissions: async () => {
 		const auth = Cookies.get('auth')
 		if (auth) {
-			const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
-				headers: {Authorization: auth},
-			})
-			return data.result.id
+			const {id} = ((await authProvider.getIdentity!()) ?? {}) as UserIdentity
+			return id ? id : null
 		}
 		return null
 	},
 	getIdentity: async () => {
 		const auth = Cookies.get('auth')
 		if (auth) {
-			const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
-				headers: {Authorization: auth},
-			})
-			return {...data.result, auth}
+			try {
+				return await mutex.runExclusive(async () => {
+					const {
+						userInfo: {userInfo},
+					} = rtkStore.getState()
+					console.log(userInfo)
+					if (!userInfo) {
+						const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
+							headers: {Authorization: auth},
+						})
+						rtkStore.dispatch(userInfoSlice.actions.setCacheUserInfo(data.result))
+						return {...data.result, auth}
+					}
+					return {...userInfo, auth}
+				})
+			} catch {
+				return null
+			}
 		}
 		return null
 	},

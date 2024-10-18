@@ -4,7 +4,8 @@ const nextConfig = {
     'env': {
         API: "http://api.bobrov95.website/api"
     },
-    'poweredByHeader': false
+    'poweredByHeader': false,
+    'reactStrictMode': false
 };
 
 export default nextConfig;
