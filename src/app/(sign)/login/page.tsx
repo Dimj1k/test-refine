@@ -24,6 +24,11 @@ export default async function Login() {
 						</Title>
 					),
 				}}
+				formProps={{
+					initialValues: {
+						remember: true,
+					},
+				}}
 				registerLink={
 					<Text style={{fontSize: '12px'}}>
 						Не имеете аккаунта?{' '}
