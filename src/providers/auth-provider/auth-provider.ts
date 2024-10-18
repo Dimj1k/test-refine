@@ -5,7 +5,6 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 import {getApi} from '../data-provider'
 import {IAuthSuccessResponce, IRegister, UserIdentity} from './interfaces'
-import {rtkStore, userInfoSlice} from '../rtk'
 import {Mutex} from 'async-mutex'
 
 export const axiosJson = axios.create({
@@ -15,6 +14,7 @@ export const axiosJson = axios.create({
 	timeout: 5000,
 })
 const mutex = new Mutex()
+let globData: UserIdentity | null = null
 export const authProvider: AuthProvider = {
 	login: async function ({email, password, remember}) {
 		const token = Cookies.get('auth')
@@ -65,7 +65,6 @@ export const authProvider: AuthProvider = {
 			)
 			Cookies.remove('auth', {path: '/'})
 		} finally {
-			rtkStore.dispatch(userInfoSlice.actions.clearCacheUserInfo())
 			return {
 				success: true,
 				redirectTo: '/login',
@@ -108,21 +107,17 @@ export const authProvider: AuthProvider = {
 		const auth = Cookies.get('auth')
 		if (auth) {
 			try {
-				return await mutex.runExclusive(async () => {
-					const {
-						userInfo: {userInfo},
-					} = rtkStore.getState()
-					if (!userInfo) {
-						const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
-							headers: {Authorization: auth},
-						})
-						rtkStore.dispatch(userInfoSlice.actions.setCacheUserInfo(data.result))
-						return {...data.result, auth}
-					}
-					return {...userInfo, auth}
+				const res = await mutex.runExclusive(async () => {
+					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
+						headers: {Authorization: auth},
+					})
+					mutex.cancel()
+					globData = {...data.result, auth}
+					return globData
 				})
+				return res
 			} catch {
-				return null
+				return globData
 			}
 		}
 		return null

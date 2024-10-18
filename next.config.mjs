@@ -5,7 +5,6 @@ const nextConfig = {
         API: "http://api.bobrov95.website/api"
     },
     'poweredByHeader': false,
-    'reactStrictMode': false
 };
 
 export default nextConfig;
