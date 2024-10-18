@@ -10,7 +10,7 @@ import {useRouter} from 'next/navigation'
 
 export default function PostEdit({params: {id: postId}}: {params: {id: string}}) {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
-	const {formProps, saveButtonProps, formLoading, query} = useForm<IPostName>()
+	const {formProps, saveButtonProps, query} = useForm<IPostName>()
 	const initialValues = formProps.initialValues as IPostName | undefined
 	const router = useRouter()
 	useEffect(() => {
@@ -37,12 +37,20 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 			footerButtons={({saveButtonProps, deleteButtonProps}) => {
 				return (
 					<>
-						{deleteButtonProps && <DeleteButton {...deleteButtonProps}>Удалить</DeleteButton>}
+						{deleteButtonProps && (
+							<DeleteButton
+								{...deleteButtonProps}
+								confirmTitle="Вы уверены?"
+								confirmOkText="Да"
+								confirmCancelText="Нет">
+								Удалить
+							</DeleteButton>
+						)}
 						{saveButtonProps && <SaveButton {...saveButtonProps}>Сохранить изменения</SaveButton>}
 					</>
 				)
 			}}>
-			<Skeleton loading={formLoading}>
+			<Skeleton loading={query?.isLoading}>
 				<Form
 					{...formProps}
 					layout="vertical"
