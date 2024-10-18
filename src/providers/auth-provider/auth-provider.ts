@@ -111,7 +111,6 @@ export const authProvider: AuthProvider = {
 					const {
 						userInfo: {userInfo},
 					} = rtkStore.getState()
-					console.log(userInfo)
 					if (!userInfo) {
 						const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
 							headers: {Authorization: auth},
