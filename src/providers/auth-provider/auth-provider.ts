@@ -119,16 +119,14 @@ export const authProvider: AuthProvider = {
 					})
 					globData.dataIndentity = {...data.result, auth}
 					mutex.cancel()
-					return globData.dataIndentity
-				})
-				return res
-			} catch {
-				if (!globData.idTimeoutClear) {
 					globData.idTimeoutClear = setTimeout(() => {
 						globData.dataIndentity = null
 						globData.idTimeoutClear = null
 					}, 1000)
-				}
+					return globData.dataIndentity
+				})
+				return res
+			} catch {
 				return globData.dataIndentity
 			}
 		}

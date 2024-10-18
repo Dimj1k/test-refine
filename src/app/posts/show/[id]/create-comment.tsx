@@ -1,4 +1,4 @@
-import {useCustomMutation, useInvalidate} from '@refinedev/core'
+import {useCustomMutation, useInvalidate, useNotification} from '@refinedev/core'
 import {Button, Form, Input} from 'antd'
 import {memo} from 'react'
 
@@ -6,6 +6,7 @@ export const CreateComment: React.FC<{token?: string; postId: number | string}> 
 	({token, postId}) => {
 		const {isLoading, mutate: sendComment} = useCustomMutation<ICommentSuccess>()
 		const [form] = Form.useForm<{text: string}>()
+		const notification = useNotification()
 		const invalidate = useInvalidate()
 		return (
 			<Form
@@ -23,9 +24,18 @@ export const CreateComment: React.FC<{token?: string; postId: number | string}> 
 							onSuccess: () => {
 								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'})
 								form.resetFields()
+								notification.open?.({
+									message: 'Ваш комментарий успешно опубликован',
+									type: 'success',
+									undoableTimeout: 2000,
+								})
 							},
 							onError: () => {
 								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'})
+								notification.open?.({
+									message: 'Произошла ошибка при опубликованнии комменатария',
+									type: 'error',
+								})
 							},
 						},
 					)
