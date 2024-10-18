@@ -111,8 +111,8 @@ export const authProvider: AuthProvider = {
 					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
 						headers: {Authorization: auth},
 					})
-					mutex.cancel()
 					globData.data = {...data.result, auth}
+					mutex.cancel()
 					return globData.data
 				})
 				return res
