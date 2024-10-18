@@ -63,8 +63,8 @@ export const authProvider: AuthProvider = {
 				{},
 				{headers: {Authorization: Cookies.get('auth')}},
 			)
-			Cookies.remove('auth', {path: '/'})
 		} finally {
+			Cookies.remove('auth', {path: '/'})
 			return {
 				success: true,
 				redirectTo: '/login',
@@ -117,6 +117,7 @@ export const authProvider: AuthProvider = {
 				})
 				return res
 			} catch {
+				setTimeout(() => (globData.data = null), 1000)
 				return globData.data
 			}
 		}
