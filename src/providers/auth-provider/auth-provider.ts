@@ -14,7 +14,7 @@ export const axiosJson = axios.create({
 	timeout: 5000,
 })
 const mutex = new Mutex()
-let globData: UserIdentity | null = null
+const globData: {data: UserIdentity | null} = {data: null}
 export const authProvider: AuthProvider = {
 	login: async function ({email, password, remember}) {
 		const token = Cookies.get('auth')
@@ -112,12 +112,12 @@ export const authProvider: AuthProvider = {
 						headers: {Authorization: auth},
 					})
 					mutex.cancel()
-					globData = {...data.result, auth}
-					return globData
+					globData.data = {...data.result, auth}
+					return globData.data
 				})
 				return res
 			} catch {
-				return globData
+				return globData.data
 			}
 		}
 		return null
