@@ -15,6 +15,9 @@ export const userInfoSlice = createSlice({
 				state.userInfo = {id, name}
 			},
 		),
+		clearCacheUserInfo: builder.reducer(state => {
+			state.userInfo = null
+		}),
 	}),
 })
 

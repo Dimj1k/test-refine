@@ -65,7 +65,7 @@ export const authProvider: AuthProvider = {
 			)
 			Cookies.remove('auth', {path: '/'})
 		} finally {
-			rtkStore.dispatch(userInfoSlice.actions.setCacheUserInfo(null))
+			rtkStore.dispatch(userInfoSlice.actions.clearCacheUserInfo())
 			return {
 				success: true,
 				redirectTo: '/login',
