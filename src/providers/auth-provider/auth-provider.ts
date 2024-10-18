@@ -14,11 +14,11 @@ export const axiosJson = axios.create({
 	timeout: 5000,
 })
 const mutex = new Mutex()
-const globDataIdentity: {
-	data: UserIdentity | null
+const globData: {
+	dataIndentity: UserIdentity | null
 	idTimeoutClear: ReturnType<typeof setTimeout> | null
 } = {
-	data: null,
+	dataIndentity: null,
 	idTimeoutClear: null,
 }
 export const authProvider: AuthProvider = {
@@ -117,19 +117,19 @@ export const authProvider: AuthProvider = {
 					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
 						headers: {Authorization: auth},
 					})
-					globDataIdentity.data = {...data.result, auth}
+					globData.dataIndentity = {...data.result, auth}
 					mutex.cancel()
-					return globDataIdentity.data
+					return globData.dataIndentity
 				})
 				return res
 			} catch {
-				if (!globDataIdentity.idTimeoutClear) {
-					globDataIdentity.idTimeoutClear = setTimeout(() => {
-						globDataIdentity.data = null
-						globDataIdentity.idTimeoutClear = null
+				if (!globData.idTimeoutClear) {
+					globData.idTimeoutClear = setTimeout(() => {
+						globData.dataIndentity = null
+						globData.idTimeoutClear = null
 					}, 1000)
 				}
-				return globDataIdentity.data
+				return globData.dataIndentity
 			}
 		}
 		return null
