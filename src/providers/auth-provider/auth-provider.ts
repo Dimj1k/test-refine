@@ -14,7 +14,11 @@ export const axiosJson = axios.create({
 	timeout: 5000,
 })
 const mutex = new Mutex()
-const globData: {data: UserIdentity | null} = {data: null}
+const globData: {data: UserIdentity | null; idTimeoutClear: ReturnType<typeof setTimeout> | null} =
+	{
+		data: null,
+		idTimeoutClear: null,
+	}
 export const authProvider: AuthProvider = {
 	login: async function ({email, password, remember}) {
 		const token = Cookies.get('auth')
@@ -117,7 +121,12 @@ export const authProvider: AuthProvider = {
 				})
 				return res
 			} catch {
-				setTimeout(() => (globData.data = null), 1000)
+				if (!globData.idTimeoutClear) {
+					globData.idTimeoutClear = setTimeout(() => {
+						globData.data = null
+						globData.idTimeoutClear = null
+					}, 1000)
+				}
 				return globData.data
 			}
 		}
