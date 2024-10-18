@@ -34,26 +34,34 @@ export const authProvider: AuthProvider = {
 		try {
 			const {
 				data: {
-					result: {access_token, token_type},
+					message,
+					result: {access_token, token_type, user},
 				},
 			} = await axiosJson.post<IAuthSuccessResponce>('login', {
 				email,
 				password,
 				remember,
 			})
+			const token = concatToken(token_type, access_token)
 			if (remember) {
-				Cookies.set('auth', concatToken(token_type, access_token), {
+				Cookies.set('auth', token, {
 					expires: 30, // 30 days
 					path: '/',
 				})
 			} else {
-				Cookies.set('auth', concatToken(token_type, access_token), {
+				Cookies.set('auth', token, {
 					path: '/',
 				})
 			}
+			globData.dataIndentity = {...user, auth: token}
+			globData.idTimeoutClear = setTimeout(() => {
+				globData.dataIndentity = null
+				globData.idTimeoutClear = null
+			}, 5000)
 			return {
 				success: true,
 				redirectTo: '/',
+				successNotification: {message},
 			}
 		} catch (e) {
 			return {
@@ -71,6 +79,8 @@ export const authProvider: AuthProvider = {
 			)
 		} finally {
 			Cookies.remove('auth', {path: '/'})
+			globData.dataIndentity = null
+			globData.idTimeoutClear = null
 			return {
 				success: true,
 				redirectTo: '/login',
@@ -125,7 +135,7 @@ export const authProvider: AuthProvider = {
 					globData.idTimeoutClear = setTimeout(() => {
 						globData.dataIndentity = null
 						globData.idTimeoutClear = null
-					}, 1000)
+					}, 5000)
 					return globData.dataIndentity
 				})
 				return res
@@ -148,17 +158,24 @@ export const authProvider: AuthProvider = {
 		try {
 			const {
 				data: {
-					result: {access_token, token_type},
+					message,
+					result: {access_token, token_type, user},
 				},
 			} = await axiosJson.post<IAuthSuccessResponce>('register', values)
-			Cookies.set('auth', concatToken(token_type, access_token), {
+			const token = concatToken(token_type, access_token)
+			Cookies.set('auth', token, {
 				expires: 30, // 30 days
 				path: '/',
 			})
+			globData.dataIndentity = {...user, auth: token}
+			globData.idTimeoutClear = setTimeout(() => {
+				globData.dataIndentity = null
+				globData.idTimeoutClear = null
+			}, 5000)
 			return {
 				success: true,
 				redirectTo: '/',
-				successNotification: {message: 'Вы успешно зарегистрировались'},
+				successNotification: {message},
 			}
 		} catch (e) {
 			if (isAxiosError(e)) {
