@@ -7,20 +7,29 @@ import {IPostName} from '../../page'
 import {UserIdentity} from '@/components/header'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
+import {IErrorResponce} from '@/providers/auth-provider/interfaces'
+import {AxiosError} from 'axios'
 
-export default function CategoryEdit({params: {id: postId}}: {params: {id: string}}) {
+export default function PostEdit({params: {id: postId}}: {params: {id: string}}) {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
-	const {formProps, saveButtonProps} = useForm({meta: {headers: {Authorization: userInfo?.auth}}})
-	const {data, isLoading} = useOne<IPostName>({
+	const {formProps, saveButtonProps} = useForm()
+	const {data, isLoading, error} = useOne<
+		IPostName,
+		AxiosError<IErrorResponce> & {statusCode: number}
+	>({
 		resource: 'posts',
 		id: postId,
 	})
 	const router = useRouter()
+	const record = data?.data
 	useEffect(() => {
-		if (data && data.data.author.id !== userInfo?.id) {
+		if (record && record.author.id !== userInfo?.id) {
 			router.back()
 		}
-	}, [data])
+		if (error?.status === 404) {
+			router.replace('/posts')
+		}
+	}, [record, error])
 
 	return (
 		<Edit
@@ -29,7 +38,7 @@ export default function CategoryEdit({params: {id: postId}}: {params: {id: strin
 			headerButtons={({refreshButtonProps, listButtonProps}) => {
 				return (
 					<>
-						<ListButton {...listButtonProps} />
+						{listButtonProps && <ListButton {...listButtonProps} />}
 						{refreshButtonProps && <RefreshButton {...refreshButtonProps}>Обновить</RefreshButton>}
 					</>
 				)
@@ -37,8 +46,8 @@ export default function CategoryEdit({params: {id: postId}}: {params: {id: strin
 			footerButtons={({saveButtonProps, deleteButtonProps}) => {
 				return (
 					<>
-						{saveButtonProps && <SaveButton {...saveButtonProps}>Сохранить изменения</SaveButton>}
 						{deleteButtonProps && <DeleteButton {...deleteButtonProps}>Удалить</DeleteButton>}
+						{saveButtonProps && <SaveButton {...saveButtonProps}>Сохранить изменения</SaveButton>}
 					</>
 				)
 			}}>
@@ -46,7 +55,7 @@ export default function CategoryEdit({params: {id: postId}}: {params: {id: strin
 				<Form
 					{...formProps}
 					layout="vertical"
-					initialValues={{title: data?.data.name, text: data?.data.text}}>
+					initialValues={{title: record?.name, text: record?.text}}>
 					<Form.Item label={'Заголовок поста'} name={'title'}>
 						<Input />
 					</Form.Item>

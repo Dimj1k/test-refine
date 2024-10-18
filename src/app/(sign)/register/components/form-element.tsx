@@ -1,8 +1,8 @@
-import {Button, Flex, Form as FormAnt, FormProps, Input, InputProps} from 'antd'
+import {Button, Flex, Form, FormProps, Input, InputProps} from 'antd'
 import {createContext, FormEvent, useContext, useMemo} from 'react'
 
 const MobileContext = createContext(false)
-const {Item} = FormAnt
+const {Item} = Form
 type NormalizeInputProps = Omit<
 	InputProps & {
 		normalizeBy: RegExp | string
@@ -45,21 +45,19 @@ const NormalizeInput: React.FC<NormalizeInputProps> = ({normalizeBy, typeInput, 
 	}
 }
 
-export const Form: React.FC<Omit<FormProps, 'form'> & {onFinish: FormProps['onFinish']}> = ({
-	onFinish,
-	...props
-}) => {
-	const mobile = useMemo(() => {
+export const RegisterForm: React.FC<
+	Omit<FormProps, 'form'> & {onFinish: FormProps['onFinish']}
+> = ({onFinish, ...props}) => {
+	const isMobile = useMemo(() => {
 		if (typeof window != 'undefined') {
 			const regex = /Mobi|Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
 			return regex.test(navigator.userAgent)
 		}
 		return false
 	}, [])
-	const [form] = FormAnt.useForm()
 	return (
-		<MobileContext.Provider value={mobile}>
-			<FormAnt layout="vertical" onFinish={onFinish} requiredMark={false} {...props} form={form}>
+		<MobileContext.Provider value={isMobile}>
+			<Form layout="vertical" onFinish={onFinish} requiredMark={false} {...props}>
 				<Item
 					name="name"
 					label="Ваше имя"
@@ -86,7 +84,7 @@ export const Form: React.FC<Omit<FormProps, 'form'> & {onFinish: FormProps['onFi
 					rules={[{required: true, message: 'Введите свою электронную почту', type: 'email'}]}
 					validateDebounce={500}
 					normalize={(value: string) => value.replace(' ', '')}>
-					<NormalizeInput size="large" placeholder="example@example.example" normalizeBy={' '} />
+					<NormalizeInput size="large" placeholder="example@example.ex" normalizeBy={' '} />
 				</Item>
 				<Item
 					name="password"
@@ -136,7 +134,7 @@ export const Form: React.FC<Omit<FormProps, 'form'> & {onFinish: FormProps['onFi
 						</Button>
 					</Flex>
 				</Item>
-			</FormAnt>
+			</Form>
 		</MobileContext.Provider>
 	)
 }

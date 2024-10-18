@@ -3,7 +3,7 @@
 import {Create, SaveButton, useForm} from '@refinedev/antd'
 import {Form, Input} from 'antd'
 
-export default function CategoryCreate() {
+export default function PostCreate() {
 	const {formProps, saveButtonProps} = useForm()
 
 	return (

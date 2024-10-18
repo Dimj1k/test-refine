@@ -1,8 +1,13 @@
 import {Header} from '@components/header'
 import {authProviderServer} from '@providers/auth-provider'
 import {ThemedLayoutV2} from '@refinedev/antd'
+import {Metadata} from 'next'
 import {redirect} from 'next/navigation'
 import React from 'react'
+
+export const metadata: Metadata = {
+	title: 'Посты',
+}
 
 export default async function Layout({children}: React.PropsWithChildren) {
 	const data = await getData()

@@ -5,13 +5,13 @@ import {memo} from 'react'
 export const CreateComment: React.FC<{token?: string; postId: number | string}> = memo(
 	({token, postId}) => {
 		const {isLoading, mutate: sendComment} = useCustomMutation<ICommentSuccess>()
-		const [form] = Form.useForm()
+		const [form] = Form.useForm<{text: string}>()
 		const invalidate = useInvalidate()
 		return (
 			<Form
 				style={{marginTop: '15px'}}
 				form={form}
-				onFinish={(values: {text: string}) =>
+				onFinish={values =>
 					sendComment(
 						{
 							url: `posts/${postId}/comments`,
@@ -23,6 +23,9 @@ export const CreateComment: React.FC<{token?: string; postId: number | string}> 
 							onSuccess: () => {
 								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'})
 								form.resetFields()
+							},
+							onError: () => {
+								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'})
 							},
 						},
 					)

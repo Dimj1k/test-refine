@@ -6,16 +6,26 @@ import {Divider, Typography} from 'antd'
 import {IPostName} from '../../page'
 import {CreateComment} from './create-comment'
 import {UserIdentity} from '@/components/header'
+import {useEffect} from 'react'
+import {useRouter} from 'next/navigation'
+import {AxiosError} from 'axios'
+import {IErrorResponce} from '@/providers/auth-provider/interfaces'
 
 const {Title, Text} = Typography
 
 export default function PostShow({params: {id: postId}}: {params: {id: string}}) {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
 	const {data: id} = usePermissions<number>()
-	const {query} = useShow<IPostName>({
+	const {query} = useShow<IPostName, AxiosError<IErrorResponce> & {statusCode: number}>({
 		id: postId,
 	})
-	const {data, isLoading} = query
+	const {data, isLoading, error} = query
+	const router = useRouter()
+	useEffect(() => {
+		if (error?.status === 404) {
+			router.replace('/posts')
+		}
+	}, [error])
 
 	const record = data?.data
 	if (!record)
@@ -61,7 +71,15 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 					<>
 						<ListButton {...listButtonProps} />
 						{editButtonProps && <EditButton {...editButtonProps}>Изменить</EditButton>}
-						{deleteButtonProps && <DeleteButton {...deleteButtonProps}>Удалить</DeleteButton>}
+						{deleteButtonProps && (
+							<DeleteButton
+								{...deleteButtonProps}
+								confirmOkText="Да"
+								confirmCancelText="Нет"
+								confirmTitle="Вы уверены?">
+								Удалить
+							</DeleteButton>
+						)}
 						{refreshButtonProps && <RefreshButton {...refreshButtonProps}>Обновить</RefreshButton>}
 					</>
 				)
@@ -69,14 +87,14 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 			<Title level={3}>Описание</Title>
 			<TextField value={record.text} />
 			<Title level={4}>Комментарии</Title>
-			{record.comments.map(comment => {
+			{record.comments.map((comment, idx) => {
 				const {
 					text,
 					author: {name: userName},
 					id,
 				} = comment
 				return (
-					<div style={{marginBottom: '5px'}} key={id}>
+					<div style={{marginBottom: '5px'}} key={id ?? idx}>
 						<Divider
 							style={{borderColor: '#4096ff', margin: 0}}
 							orientation="left"

@@ -34,12 +34,12 @@ export const authProvider: AuthProvider = {
 				password,
 			})
 			if (remember) {
-				Cookies.set('auth', token_type + ' ' + access_token, {
+				Cookies.set('auth', concatToken(token_type, access_token), {
 					expires: 30, // 30 days
 					path: '/',
 				})
 			} else {
-				Cookies.set('auth', token_type + ' ' + access_token, {
+				Cookies.set('auth', concatToken(token_type, access_token), {
 					path: '/',
 				})
 			}
@@ -129,7 +129,7 @@ export const authProvider: AuthProvider = {
 					result: {access_token, token_type},
 				},
 			} = await axiosJson.post<IAuthSuccessResponce>('register', values)
-			Cookies.set('auth', token_type + ' ' + access_token, {
+			Cookies.set('auth', concatToken(token_type, access_token), {
 				expires: 30, // 30 days
 				path: '/',
 			})
@@ -143,3 +143,5 @@ export const authProvider: AuthProvider = {
 		}
 	},
 }
+
+const concatToken = (tokenType: string, accessToken: string) => tokenType + ' ' + accessToken

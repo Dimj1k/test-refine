@@ -2,7 +2,7 @@
 import {Link, useRegister} from '@refinedev/core'
 import {Card, Col, Layout, Row, Typography} from 'antd'
 import {HeaderAntd} from './header-element'
-import {Form} from './form-element'
+import {RegisterForm} from './form-element'
 
 export const titleStyle = {
 	color: '#4096ff',
@@ -40,7 +40,7 @@ export const RegisterPage: React.FC = () => {
 							boxShadow:
 								'rgba(0, 0, 0, 0.02) 0 2px 4px 0px 1px 6px -1px, rgba(0, 0, 0, 0.03) 0px 1px 2px',
 						}}>
-						<Form onFinish={registeration} disabled={isLoading} />
+						<RegisterForm onFinish={registeration} disabled={isLoading} />
 						<Text style={{fontSize: '12px'}}>
 							Есть аккаунт?{' '}
 							<Link to="/login" style={{fontWeight: 'bold', color: '#4096ff'}}>
