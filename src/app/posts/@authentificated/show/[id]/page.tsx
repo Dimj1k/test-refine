@@ -56,7 +56,7 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 	return (
 		<Show
 			isLoading={isLoading}
-			title={title ?? `Пост №${postId}`}
+			title={<span style={{textWrap: 'wrap'}}>{title ?? `Пост №${postId}`}</span>}
 			canDelete={id === authorId}
 			canEdit={id === authorId}
 			headerButtons={({

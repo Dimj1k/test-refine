@@ -4,11 +4,11 @@ import {DeleteButton, EditButton, List, ShowButton, useTable} from '@refinedev/a
 import {usePermissions} from '@refinedev/core'
 import {Space, Table} from 'antd'
 
-export default function CategoryList() {
+export default function PostsList() {
 	const {data: id} = usePermissions<number>()
 	const {tableProps} = useTable<IPostTitle>({})
 	return (
-		<List>
+		<List createButtonProps={{children: 'Создать'}}>
 			<Table<IPostTitle> {...tableProps} rowKey="id">
 				<Table.Column dataIndex="id" title={'Идентификатор'} width={'12%'} />
 				<Table.Column dataIndex="name" title={'Название'} />
@@ -16,7 +16,7 @@ export default function CategoryList() {
 					dataIndex="text"
 					title="Описание"
 					render={(_, record) =>
-						record.text.length > 100 ? record.text.slice(0, 97) + '...' : record.text
+						record.text.length > 100 ? record.text.slice(0, 96) + '...' : record.text
 					}
 				/>
 				<Table.ColumnGroup title="Автор">

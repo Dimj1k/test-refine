@@ -12,8 +12,6 @@ export const authProviderServer: Pick<AuthProvider, 'check'> = {
 
 		return {
 			authenticated: false,
-			logout: true,
-			redirectTo: '/login',
 		}
 	},
 }

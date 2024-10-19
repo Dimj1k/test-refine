@@ -27,7 +27,6 @@ export const CreateComment: React.FC<{token?: string; postId: number | string}> 
 								notification.open?.({
 									message: 'Ваш комментарий успешно опубликован',
 									type: 'success',
-									undoableTimeout: 2000,
 								})
 							},
 							onError: () => {

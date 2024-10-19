@@ -37,7 +37,11 @@ export default async function Login() {
 						</Link>
 					</Text>
 				}
-				forgotPasswordLink={false}
+				forgotPasswordLink={
+					<Link to="/" style={{fontSize: '12px'}}>
+						Продолжить как гость
+					</Link>
+				}
 			/>
 		</Suspense>
 	)

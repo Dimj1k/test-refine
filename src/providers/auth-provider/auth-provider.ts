@@ -91,10 +91,7 @@ export const authProvider: AuthProvider = {
 		const token = Cookies.get('auth')
 		if (!token) {
 			return {
-				authenticated: false,
-				logout: true,
-				redirectTo: '/login',
-				error: new Error('Доступ только для зарегистрированных пользователей'),
+				authenticated: true,
 			}
 		}
 		try {
@@ -179,7 +176,7 @@ export const authProvider: AuthProvider = {
 			}
 		} catch (e) {
 			if (isAxiosError(e)) {
-				return {error: new Error(e.response?.data.message), success: false}
+				return {error: {...e, message: e.response?.data.message}, success: false}
 			}
 			return {error: e as Error, success: false}
 		}
