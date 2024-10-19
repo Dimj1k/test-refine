@@ -21,7 +21,7 @@ export default async function Layout({
 	if (!data.authenticated) {
 		return redirect(data?.redirectTo || '/login')
 	}
-	return <ThemedLayoutV2 Header={Header}>{data.guest ? authentificated : guest}</ThemedLayoutV2>
+	return <ThemedLayoutV2 Header={Header}>{data.guest ? guest : authentificated}</ThemedLayoutV2>
 }
 
 async function getData() {

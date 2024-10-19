@@ -73,7 +73,7 @@ export const authProvider: AuthProvider = {
 	logout: async () => {
 		try {
 			const token = Cookies.get('auth')
-			if (token) {
+			if (token && token !== 'guest') {
 				await axiosJson.post<IAuthSuccessResponce>('logout', {}, {headers: {Authorization: token}})
 			}
 		} finally {
