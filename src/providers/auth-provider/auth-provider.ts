@@ -57,7 +57,7 @@ export const authProvider: AuthProvider = {
 			globData.idTimeoutClear = setTimeout(() => {
 				globData.dataIndentity = null
 				globData.idTimeoutClear = null
-			}, 5000)
+			}, 15000)
 			return {
 				success: true,
 				redirectTo: '/',
@@ -167,7 +167,7 @@ export const authProvider: AuthProvider = {
 			globData.idTimeoutClear = setTimeout(() => {
 				globData.dataIndentity = null
 				globData.idTimeoutClear = null
-			}, 5000)
+			}, 15000)
 			return {
 				success: true,
 				redirectTo: '/',
