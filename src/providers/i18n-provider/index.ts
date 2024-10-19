@@ -7,8 +7,8 @@ import {initReactI18next} from 'react-i18next'
 i18next
 	.use(initReactI18next)
 	.use(
-		resourcesToBackend(async () => {
-			return await import(`./ru-common.json`)
+		resourcesToBackend(async (language: string) => {
+			return await import(`./${language}-common.json`)
 		}),
 	)
-	.init({lng: 'ru'})
+	.init({lng: 'ru', fallbackLng: 'en'})
