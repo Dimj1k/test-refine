@@ -41,7 +41,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({sticky = true
 				/>
 				{userInfo?.name && (
 					<Space style={{marginLeft: '8px'}} size="middle">
-						{userInfo?.name && <Text strong>{userInfo.name}</Text>}
+						<Text strong>{userInfo.name}</Text>
 					</Space>
 				)}
 			</Space>

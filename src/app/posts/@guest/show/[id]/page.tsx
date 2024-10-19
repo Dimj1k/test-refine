@@ -1,8 +1,8 @@
 'use client'
 
 import {ListButton, RefreshButton, Show, TextField} from '@refinedev/antd'
-import {useShow} from '@refinedev/core'
-import {Divider, Typography} from 'antd'
+import {Link, useShow} from '@refinedev/core'
+import {Breadcrumb, Divider, Typography} from 'antd'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {IPostName} from '../../../@authentificated/page'
@@ -48,6 +48,9 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 
 	return (
 		<Show
+			breadcrumb={
+				<Breadcrumb items={[{title: <Link to="/posts">Посты</Link>}, {title: 'Просмотр поста'}]} />
+			}
 			isLoading={isLoading}
 			title={<span style={{textWrap: 'wrap'}}>{title ?? `Пост №${postId}`}</span>}
 			canDelete={false}

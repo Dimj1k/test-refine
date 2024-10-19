@@ -1,8 +1,8 @@
 'use client'
 
 import {DeleteButton, EditButton, ListButton, RefreshButton, Show, TextField} from '@refinedev/antd'
-import {useGetIdentity, usePermissions, useShow} from '@refinedev/core'
-import {Divider, Typography} from 'antd'
+import {Link, useGetIdentity, usePermissions, useShow} from '@refinedev/core'
+import {Breadcrumb, Divider, Typography} from 'antd'
 import {IPostName} from '../../page'
 import {CreateComment} from './create-comment'
 import {useEffect} from 'react'
@@ -55,6 +55,9 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 
 	return (
 		<Show
+			breadcrumb={
+				<Breadcrumb items={[{title: <Link to="/posts">Посты</Link>}, {title: 'Просмотр поста'}]} />
+			}
 			isLoading={isLoading}
 			title={<span style={{textWrap: 'wrap'}}>{title ?? `Пост №${postId}`}</span>}
 			canDelete={id === authorId}

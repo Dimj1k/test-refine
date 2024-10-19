@@ -1,19 +1,12 @@
-import {DevtoolsProvider} from '@providers/devtools'
-import {useNotificationProvider} from '@refinedev/antd'
-import {Refine} from '@refinedev/core'
-import {RefineKbar, RefineKbarProvider} from '@refinedev/kbar'
-import routerProvider from '@refinedev/nextjs-router'
 import {Metadata} from 'next'
 import {cookies} from 'next/headers'
 import React, {Suspense} from 'react'
 
 import {AntdRegistry} from '@ant-design/nextjs-registry'
-import {AppIcon} from '@components/app-icon'
+
 import {ColorModeContextProvider} from '@contexts/color-mode'
-import {authProvider} from '@providers/auth-provider'
-import {dataProvider} from '@providers/data-provider'
 import '@refinedev/antd/dist/reset.css'
-import RefIcon from '@ant-design/icons/lib/icons/TruckFilled'
+import {RefineContext} from '@/providers/refine-context'
 
 export const metadata: Metadata = {
 	title: 'Refine',
@@ -35,42 +28,11 @@ export default function RootLayout({
 		<html lang="ru">
 			<body>
 				<Suspense>
-					<RefineKbarProvider>
-						<AntdRegistry>
-							<ColorModeContextProvider defaultMode={defaultMode}>
-								<DevtoolsProvider>
-									<Refine
-										routerProvider={routerProvider}
-										dataProvider={dataProvider}
-										notificationProvider={useNotificationProvider}
-										authProvider={authProvider}
-										resources={[
-											{
-												name: 'posts',
-												list: '/posts',
-												create: '/posts/create',
-												edit: '/posts/edit/:id',
-												show: '/posts/show/:id',
-												meta: {
-													canDelete: true,
-													label: 'Посты',
-													icon: <RefIcon />,
-												},
-											},
-										]}
-										options={{
-											warnWhenUnsavedChanges: true,
-											useNewQueryKeys: true,
-											projectId: 'fGVDEF-tC5vtr-68GdlO',
-											title: {text: 'Refine Project', icon: <AppIcon />},
-										}}>
-										{children}
-										<RefineKbar />
-									</Refine>
-								</DevtoolsProvider>
-							</ColorModeContextProvider>
-						</AntdRegistry>
-					</RefineKbarProvider>
+					<AntdRegistry>
+						<ColorModeContextProvider defaultMode={defaultMode}>
+							<RefineContext>{children}</RefineContext>
+						</ColorModeContextProvider>
+					</AntdRegistry>
 				</Suspense>
 			</body>
 		</html>

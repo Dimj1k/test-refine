@@ -1,0 +1,24 @@
+{
+    "pages": {
+        "login": {
+            "signin": "Войти",
+            "fields": {
+                "email": "Электронная почта",
+                "password": "Пароль"
+            },
+            "errors": {
+                "validEmail": "Введите свою электронную почту",
+                "requiredPassword": "Введите пароль",
+                "requiredEmail": "Введите свою электронную почту"
+            }
+        }
+    },
+    "notifications": {
+        "editSuccess": "Изменение произошло успешно",
+        "editError": "Изменение не произошло",
+        "createSuccess": "Добавлено успешно",
+        "errorSuccess": "Ошибка",
+        "deleteSuccess": "Удалено успешно",
+        "deleteError": "Ошибка"
+    }
+}

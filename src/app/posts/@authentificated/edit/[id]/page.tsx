@@ -1,8 +1,8 @@
 'use client'
 
 import {DeleteButton, Edit, ListButton, RefreshButton, SaveButton, useForm} from '@refinedev/antd'
-import {useGetIdentity} from '@refinedev/core'
-import {Form, Input, Skeleton} from 'antd'
+import {Link, useGetIdentity} from '@refinedev/core'
+import {Breadcrumb, Form, Input, Skeleton} from 'antd'
 import {UserIdentity} from '@/providers/auth-provider/interfaces'
 import {IPostName} from '../../page'
 import {useEffect} from 'react'
@@ -24,6 +24,11 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 
 	return (
 		<Edit
+			breadcrumb={
+				<Breadcrumb
+					items={[{title: <Link to="/posts">Посты</Link>}, {title: 'Редактирование поста'}]}
+				/>
+			}
 			title={`Редактировать пост №${postId}`}
 			saveButtonProps={saveButtonProps}
 			headerButtons={({refreshButtonProps, listButtonProps}) => {

@@ -4,7 +4,10 @@ import Cookies from 'js-cookie'
 
 export const Guest = () => {
 	return (
-		<Link to="/" style={{fontSize: '12px'}} onClick={() => Cookies.set('auth', 'guest')}>
+		<Link
+			to="/"
+			style={{fontSize: '12px', height: '1.5em'}}
+			onClick={() => Cookies.set('auth', 'guest')}>
 			Продолжить как гость
 		</Link>
 	)

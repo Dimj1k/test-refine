@@ -1,13 +1,17 @@
 'use client'
 
 import {Create, SaveButton, useForm} from '@refinedev/antd'
-import {Form, Input} from 'antd'
+import {Link} from '@refinedev/core'
+import {Breadcrumb, Form, Input} from 'antd'
 
 export default function PostCreate() {
 	const {formProps, saveButtonProps} = useForm()
 
 	return (
 		<Create
+			breadcrumb={
+				<Breadcrumb items={[{title: <Link to="/posts">Посты</Link>}, {title: 'Создание поста'}]} />
+			}
 			title="Создать новый пост"
 			saveButtonProps={saveButtonProps}
 			footerButtons={({saveButtonProps}) => (

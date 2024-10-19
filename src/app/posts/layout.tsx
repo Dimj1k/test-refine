@@ -1,10 +1,10 @@
 import {Header} from '@components/header'
 import {authProviderServer} from '@providers/auth-provider'
-import {ThemedLayoutV2} from '@refinedev/antd'
 import {CheckResponse} from '@refinedev/core'
 import {Metadata} from 'next'
 import {redirect} from 'next/navigation'
 import React from 'react'
+import {ThemedLayout} from './themed-layout'
 
 export const metadata: Metadata = {
 	title: 'Посты',
@@ -21,7 +21,7 @@ export default async function Layout({
 	if (!data.authenticated) {
 		return redirect(data?.redirectTo || '/login')
 	}
-	return <ThemedLayoutV2 Header={Header}>{data.guest ? guest : authentificated}</ThemedLayoutV2>
+	return <ThemedLayout Header={Header}>{data.guest ? guest : authentificated}</ThemedLayout>
 }
 
 async function getData() {
