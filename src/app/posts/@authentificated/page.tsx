@@ -8,7 +8,7 @@ export default function PostsList() {
 	const {data: id} = usePermissions<number>()
 	const {tableProps} = useTable<IPostTitle>({})
 	return (
-		<List createButtonProps={{children: 'Создать'}}>
+		<List createButtonProps={{children: 'Создать'}} canCreate={!!id}>
 			<Table<IPostTitle> {...tableProps} rowKey="id">
 				<Table.Column dataIndex="id" title={'Идентификатор'} width={'12%'} />
 				<Table.Column dataIndex="name" title={'Название'} />
