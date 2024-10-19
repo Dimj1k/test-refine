@@ -72,11 +72,8 @@ export const authProvider: AuthProvider = {
 	},
 	logout: async () => {
 		try {
-			await axiosJson.post<IAuthSuccessResponce>(
-				'logout',
-				{},
-				{headers: {Authorization: Cookies.get('auth')}},
-			)
+			const token = Cookies.get('auth')
+			await axiosJson.post<IAuthSuccessResponce>('logout', {}, {headers: {Authorization: token}})
 		} finally {
 			Cookies.remove('auth', {path: '/'})
 			globData.dataIndentity = null
