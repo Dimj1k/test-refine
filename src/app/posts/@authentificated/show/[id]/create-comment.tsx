@@ -22,18 +22,20 @@ export const CreateComment: React.FC<{token?: string; postId: number | string}> 
 						},
 						{
 							onSuccess: () => {
-								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'})
-								form.resetFields()
-								notification.open?.({
-									message: 'Ваш комментарий успешно опубликован',
-									type: 'success',
+								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'}).then(() => {
+									form.resetFields()
+									notification.open?.({
+										message: 'Ваш комментарий успешно опубликован',
+										type: 'success',
+									})
 								})
 							},
 							onError: () => {
-								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'})
-								notification.open?.({
-									message: 'Произошла ошибка при опубликованнии комменатария',
-									type: 'error',
+								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'}).then(() => {
+									notification.open?.({
+										message: 'Произошла ошибка при опубликованнии комменатария',
+										type: 'error',
+									})
 								})
 							},
 						},

@@ -90,6 +90,11 @@ export const authProvider: AuthProvider = {
 		const token = Cookies.get('auth')
 		if (!token) {
 			return {
+				authenticated: false,
+			}
+		}
+		if (token === 'guest') {
+			return {
 				authenticated: true,
 			}
 		}

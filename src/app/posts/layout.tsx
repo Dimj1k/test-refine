@@ -1,7 +1,9 @@
 import {Header} from '@components/header'
 import {authProviderServer} from '@providers/auth-provider'
 import {ThemedLayoutV2} from '@refinedev/antd'
+import {CheckResponse} from '@refinedev/core'
 import {Metadata} from 'next'
+import {redirect} from 'next/navigation'
 import React from 'react'
 
 export const metadata: Metadata = {
@@ -15,17 +17,25 @@ export default async function Layout({
 	guest: React.ReactNode
 	authentificated: React.ReactNode
 }) {
-	const isAuthentificated = await getData()
-	return (
-		<ThemedLayoutV2 Header={Header}>{isAuthentificated ? authentificated : guest}</ThemedLayoutV2>
-	)
+	const data = await getData()
+	if (!data.authenticated) {
+		return redirect(data?.redirectTo || '/login')
+	}
+	return <ThemedLayoutV2 Header={Header}>{data.guest ? authentificated : guest}</ThemedLayoutV2>
 }
 
 async function getData() {
-	const {authenticated, redirectTo} = await authProviderServer.check()
+	const {
+		authenticated,
+		isGuest: guest,
+		redirectTo,
+	} = (await authProviderServer.check()) as CheckResponse & {
+		isGuest?: boolean
+	}
 
 	return {
 		authenticated,
+		guest,
 		redirectTo,
 	}
 }

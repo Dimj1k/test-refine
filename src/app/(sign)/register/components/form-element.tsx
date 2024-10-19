@@ -3,7 +3,7 @@ import {useRegister} from '@refinedev/core'
 import {Button, Flex, Form, FormProps, Input, InputProps} from 'antd'
 import {createContext, FormEvent, useContext, useMemo} from 'react'
 
-const MobileContext = createContext(false)
+const MobileContext = createContext(true)
 const {Item} = Form
 type NormalizeInputProps = Omit<
 	InputProps & {

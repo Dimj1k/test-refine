@@ -6,6 +6,7 @@ import {Suspense} from 'react'
 import {RememberMe} from './remember-me'
 import {Metadata} from 'next'
 import {titleStyle} from '../inline-style'
+import {Guest} from './guest'
 
 export const metadata: Metadata = {
 	title: 'Вход',
@@ -37,11 +38,7 @@ export default async function Login() {
 						</Link>
 					</Text>
 				}
-				forgotPasswordLink={
-					<Link to="/" style={{fontSize: '12px'}}>
-						Продолжить как гость
-					</Link>
-				}
+				forgotPasswordLink={<Guest />}
 			/>
 		</Suspense>
 	)
