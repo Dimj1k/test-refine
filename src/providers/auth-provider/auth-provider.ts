@@ -131,15 +131,19 @@ export const authProvider: AuthProvider = {
 	getIdentity: async () => {
 		const auth = Cookies.get('auth')
 		if (auth) {
+			const token =
+				auth !== 'guest' ? auth : 'Bearer 163|I6etNbJQAJF7cnJmHrHMH0tOZGlySs73Gfp3w1E68ee70ce6'
 			try {
 				if (globData.dataIndentity) {
 					return globData.dataIndentity
 				}
 				const res = await mutex.runExclusive(async () => {
 					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
-						headers: {Authorization: auth},
+						headers: {
+							Authorization: token,
+						},
 					})
-					globData.dataIndentity = {...data.result, auth}
+					globData.dataIndentity = {...data.result, auth: token}
 					mutex.cancel()
 					globData.idTimeoutClear = setTimeout(() => {
 						globData.dataIndentity = null
