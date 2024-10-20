@@ -47,10 +47,12 @@ export const authProvider: AuthProvider = {
 				Cookies.set('auth', token, {
 					expires: 30, // 30 days
 					path: '/',
+					sameSite: 'Lax',
 				})
 			} else {
 				Cookies.set('auth', token, {
 					path: '/',
+					sameSite: 'Lax',
 				})
 			}
 			globData.dataIndentity = {...user, auth: token}
@@ -167,6 +169,7 @@ export const authProvider: AuthProvider = {
 		if (error.response?.status === 401) {
 			return {
 				logout: true,
+				error,
 			}
 		}
 
@@ -184,6 +187,7 @@ export const authProvider: AuthProvider = {
 			Cookies.set('auth', token, {
 				expires: 30, // 30 days
 				path: '/',
+				sameSite: 'Lax',
 			})
 			globData.dataIndentity = {...user, auth: token}
 			globData.idTimeoutClear = setTimeout(() => {
