@@ -20,9 +20,9 @@ export const ThemedLayout = ({
 						return (
 							<>
 								{items}
-								<Menu.Item key={'logout'}>
+								<Menu.Item key={'logout'} onClick={() => logout()}>
 									<LogoutOutlined />
-									<Typography.Text onClick={() => logout()}>Выйти</Typography.Text>
+									<Typography.Text>Выйти</Typography.Text>
 								</Menu.Item>
 							</>
 						)

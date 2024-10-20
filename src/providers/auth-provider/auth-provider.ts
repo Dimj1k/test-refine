@@ -80,7 +80,7 @@ export const authProvider: AuthProvider = {
 							{},
 							{headers: {Authorization: token}},
 					  )
-					: {data: {message: 'Вы вышли'}}
+					: {data: {message: 'Successfully logged out'}}
 			return {
 				success: true,
 				redirectTo: '/login',
@@ -99,6 +99,7 @@ export const authProvider: AuthProvider = {
 		if (!token) {
 			return {
 				authenticated: false,
+				redirectTo: '/login',
 			}
 		}
 		if (token === 'guest') {

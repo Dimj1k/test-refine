@@ -1,7 +1,7 @@
 'use client'
 
 import {DeleteButton, Edit, ListButton, RefreshButton, SaveButton, useForm} from '@refinedev/antd'
-import {Link, useGetIdentity} from '@refinedev/core'
+import {Link, useGetIdentity, useNotification} from '@refinedev/core'
 import {Breadcrumb, Form, Input, Skeleton} from 'antd'
 import {UserIdentity} from '@/providers/auth-provider/interfaces'
 import {IPostName} from '../../page'
@@ -13,9 +13,11 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 	const {formProps, saveButtonProps, query} = useForm<IPostName>()
 	const initialValues = formProps.initialValues as IPostName | undefined
 	const router = useRouter()
+	const notify = useNotification()
 	useEffect(() => {
 		if (initialValues && initialValues.author.id !== userInfo?.id) {
 			router.back()
+			notify.open?.({message: 'Вы не можете редактировать не свои посты', type: 'error'})
 		}
 		if (query?.isError) {
 			router.replace('/posts')
@@ -40,6 +42,7 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 				)
 			}}
 			footerButtons={({saveButtonProps, deleteButtonProps}) => {
+				const isAuthor = initialValues?.author.id === userInfo?.id
 				return (
 					<>
 						{deleteButtonProps && (
@@ -47,11 +50,16 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 								{...deleteButtonProps}
 								confirmTitle="Вы уверены?"
 								confirmOkText="Да"
-								confirmCancelText="Нет">
+								confirmCancelText="Нет"
+								disabled={!isAuthor}>
 								Удалить
 							</DeleteButton>
 						)}
-						{saveButtonProps && <SaveButton {...saveButtonProps}>Сохранить изменения</SaveButton>}
+						{saveButtonProps && (
+							<SaveButton {...saveButtonProps} disabled={!isAuthor}>
+								Сохранить изменения
+							</SaveButton>
+						)}
 					</>
 				)
 			}}>

@@ -17,7 +17,6 @@
         "editSuccess": "Изменение произошло успешно",
         "editError": "Изменение не произошло",
         "createSuccess": "Добавлено успешно",
-        "errorSuccess": "Ошибка",
         "deleteSuccess": "Удалено успешно",
         "deleteError": "Ошибка"
     }
