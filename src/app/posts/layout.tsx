@@ -10,18 +10,12 @@ export const metadata: Metadata = {
 	title: 'Посты',
 }
 
-export default async function Layout({
-	authentificated,
-	guest,
-}: {
-	guest: React.ReactNode
-	authentificated: React.ReactNode
-}) {
+export default async function Layout({authentificated}: {authentificated: React.ReactNode}) {
 	const data = await getData()
 	if (!data.authenticated) {
 		return redirect(data?.redirectTo || '/login')
 	}
-	return <ThemedLayout Header={Header}>{data.guest ? guest : authentificated}</ThemedLayout>
+	return <ThemedLayout Header={Header}>{authentificated}</ThemedLayout>
 }
 
 async function getData() {

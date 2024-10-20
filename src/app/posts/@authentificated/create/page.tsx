@@ -1,11 +1,24 @@
 'use client'
 
 import {Create, SaveButton, useForm} from '@refinedev/antd'
-import {Link} from '@refinedev/core'
-import {Breadcrumb, Form, Input} from 'antd'
+import {Link, useGetIdentity} from '@refinedev/core'
+import {Breadcrumb, Form, Input, Result} from 'antd'
+import {UserIdentity} from '@/providers/auth-provider/interfaces'
 
 export default function PostCreate() {
+	const {data: userInfo} = useGetIdentity<UserIdentity>()
 	const {formProps, saveButtonProps} = useForm()
+
+	if (userInfo?.id === 0) {
+		return (
+			<Result
+				title="403"
+				status={403}
+				subTitle="Войдите, чтобы создавать посты"
+				extra={<Link to="/">Вернуться на главную страницу</Link>}
+			/>
+		)
+	}
 
 	return (
 		<Create

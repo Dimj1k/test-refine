@@ -2,7 +2,7 @@
 
 import {DeleteButton, Edit, ListButton, RefreshButton, SaveButton, useForm} from '@refinedev/antd'
 import {Link, useGetIdentity, useNotification} from '@refinedev/core'
-import {Breadcrumb, Form, Input, Skeleton} from 'antd'
+import {Breadcrumb, Form, Input, Result, Skeleton} from 'antd'
 import {UserIdentity} from '@/providers/auth-provider/interfaces'
 import {IPostName} from '../../page'
 import {useEffect} from 'react'
@@ -15,7 +15,7 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 	const router = useRouter()
 	const notify = useNotification()
 	useEffect(() => {
-		if (initialValues && initialValues.author.id !== userInfo?.id) {
+		if (userInfo?.id && initialValues && initialValues.author.id !== userInfo.id) {
 			router.back()
 			notify.open?.({message: 'Вы не можете редактировать не свои посты', type: 'error'})
 		}
@@ -23,6 +23,17 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 			router.replace('/posts')
 		}
 	}, [initialValues, query?.isError])
+
+	if (userInfo?.id === 0) {
+		return (
+			<Result
+				title="403"
+				status={403}
+				subTitle="Войдите, чтобы редактировать посты"
+				extra={<Link to="/">Вернуться на главную страницу</Link>}
+			/>
+		)
+	}
 
 	return (
 		<Edit

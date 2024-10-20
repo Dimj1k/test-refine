@@ -144,7 +144,11 @@ export const authProvider: AuthProvider = {
 							Authorization: token,
 						},
 					})
-					globData.dataIndentity = {...data.result, auth: token}
+					if (auth === 'guest') {
+						globData.dataIndentity = {name: 'Гость', id: 0, auth: token}
+					} else {
+						globData.dataIndentity = {...data.result, auth: token}
+					}
 					mutex.cancel()
 					globData.idTimeoutClear = setTimeout(() => {
 						globData.dataIndentity = null
