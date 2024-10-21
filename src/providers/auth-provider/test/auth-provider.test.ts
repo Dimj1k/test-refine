@@ -2,10 +2,11 @@
 
 import type {AuthProvider} from '@refinedev/core'
 import axios, {isAxiosError} from 'axios'
-import Cookies from 'js-cookie'
 import {getApi} from '../data-provider'
 import {IAuthSuccessResponce, IRegister, UserIdentity} from './interfaces'
 import {Mutex} from 'async-mutex'
+import {setAuthCookie, getAuthCookie, deleteAuthCookie} from './http-only-cookie.test'
+import Cookies from 'js-cookie'
 
 export const axiosJson = axios.create({
 	headers: {Accept: 'application/json'},
@@ -16,12 +17,18 @@ export const axiosJson = axios.create({
 const mutex = new Mutex()
 const globData: {
 	dataIndentity: UserIdentity | null
+	auth?: string
+	clear: () => void
 } = {
 	dataIndentity: null,
+	auth: undefined,
+	clear: function () {
+		this.dataIndentity = null
+	},
 }
 export const authProvider: AuthProvider = {
 	login: async function ({email, password, remember}) {
-		const token = Cookies.get('auth')
+		const token = globData.auth
 		if (token) {
 			return {
 				success: true,
@@ -42,17 +49,11 @@ export const authProvider: AuthProvider = {
 			})
 			const token = concatToken(token_type, access_token)
 			if (remember) {
-				Cookies.set('auth', token, {
-					expires: 30, // 30 days
-					path: '/',
-					sameSite: 'Lax',
-				})
+				setAuthCookie(token)
 			} else {
-				Cookies.set('auth', token, {
-					path: '/',
-					sameSite: 'Lax',
-				})
+				Cookies.set('auth', token, {sameSite: 'lax'})
 			}
+			globData.auth = token
 			globData.dataIndentity = {...user, auth: token}
 			return {
 				success: true,
@@ -68,7 +69,7 @@ export const authProvider: AuthProvider = {
 	},
 	logout: async () => {
 		try {
-			const token = Cookies.get('auth')
+			const token = (await deleteAuthCookie())?.value
 			const {data} =
 				token && token !== 'guest'
 					? await axiosJson.post<IAuthSuccessResponce>(
@@ -85,21 +86,16 @@ export const authProvider: AuthProvider = {
 		} catch (e) {
 			return {success: true, redirectTo: '/login'}
 		} finally {
-			Cookies.remove('auth', {path: '/'})
-			globData.dataIndentity = null
+			globData.clear()
+			globData.auth = undefined
 		}
 	},
 	check: async () => {
-		const token = Cookies.get('auth')
+		const token = globData.auth || (globData.auth = (await getAuthCookie())?.value)
 		if (!token) {
 			return {
 				authenticated: false,
 				redirectTo: '/login',
-			}
-		}
-		if (token === 'guest') {
-			return {
-				authenticated: true,
 			}
 		}
 		try {
@@ -117,22 +113,26 @@ export const authProvider: AuthProvider = {
 		}
 	},
 	getPermissions: async () => {
-		const auth = Cookies.get('auth')
-		if (auth) {
-			const {id} = ((await authProvider.getIdentity!()) ?? {}) as UserIdentity
-			return id ? id : null
-		}
-		return null
+		const {id} = ((await authProvider.getIdentity!()) ?? {}) as UserIdentity
+		return id ? id : null
 	},
 	getIdentity: async () => {
-		const auth = Cookies.get('auth')
+		if (globData.dataIndentity) {
+			return globData.dataIndentity
+		}
+		const auth = await mutex.runExclusive(async () => {
+			if (!globData.auth) {
+				const cookie = (await getAuthCookie())?.value
+				globData.auth = cookie
+				setAuthCookie(cookie)
+				return cookie
+			}
+			return globData.auth
+		})
 		if (auth) {
 			const token =
 				auth !== 'guest' ? auth : 'Bearer 163|I6etNbJQAJF7cnJmHrHMH0tOZGlySs73Gfp3w1E68ee70ce6'
 			try {
-				if (globData.dataIndentity) {
-					return globData.dataIndentity
-				}
 				const res = await mutex.runExclusive(async () => {
 					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
 						headers: {
@@ -173,11 +173,8 @@ export const authProvider: AuthProvider = {
 				},
 			} = await axiosJson.post<IAuthSuccessResponce>('register', values)
 			const token = concatToken(token_type, access_token)
-			Cookies.set('auth', token, {
-				expires: 30, // 30 days
-				path: '/',
-				sameSite: 'Lax',
-			})
+			await setAuthCookie(token)
+			globData.auth = token
 			globData.dataIndentity = {...user, auth: token}
 			return {
 				success: true,
