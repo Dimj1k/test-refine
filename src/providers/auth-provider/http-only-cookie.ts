@@ -2,11 +2,17 @@
 
 import {cookies} from 'next/headers'
 
-export async function setAuthCookie(token?: string) {
+export async function setAuthCookie(token: string, remember?: boolean) {
 	console.log('Добавление')
-	if (token) {
+	if (remember) {
 		cookies().set('auth', token, {
-			expires: Date.now() + 60e3 * 60 * 24 * 30,
+			secure: false,
+			httpOnly: true,
+			sameSite: 'lax',
+		})
+	} else {
+		cookies().set('auth', token, {
+			expires: Date.now() + 60e3 * 60 * 30 * 24,
 			secure: false,
 			httpOnly: true,
 			sameSite: 'lax',

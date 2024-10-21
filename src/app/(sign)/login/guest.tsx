@@ -1,13 +1,10 @@
 'use client'
 import {Link} from '@refinedev/core'
-import Cookies from 'js-cookie'
+import {setAuthCookie} from '@/providers/auth-provider/http-only-cookie'
 
 export const Guest = () => {
 	return (
-		<Link
-			to="/"
-			style={{fontSize: '12px', height: '1.5em'}}
-			onClick={() => Cookies.set('auth', 'guest')}>
+		<Link to="/" style={{fontSize: '12px', height: '1.5em'}} onClick={() => setAuthCookie('guest')}>
 			Продолжить как гость
 		</Link>
 	)
