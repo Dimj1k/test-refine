@@ -1,6 +1,6 @@
 'use client'
 
-import type {AuthProvider} from '@refinedev/core'
+import type {AuthProvider, HttpError} from '@refinedev/core'
 import axios, {isAxiosError} from 'axios'
 import Cookies from 'js-cookie'
 import {getApi} from '../data-provider'
@@ -13,6 +13,21 @@ export const axiosJson = axios.create({
 	responseType: 'json',
 	timeout: 5000,
 })
+axiosJson.interceptors.response.use(
+	response => {
+		return response
+	},
+	error => {
+		const customError: HttpError = {
+			...error,
+			message: error.response?.data?.message,
+			statusCode: error.response?.status,
+			name: '',
+		}
+
+		throw customError
+	},
+)
 const mutex = new Mutex()
 const globData: {
 	dataIndentity: UserIdentity | null
@@ -64,7 +79,7 @@ export const authProvider: AuthProvider = {
 			if (isAxiosError<IMessage>(e)) {
 				return {
 					success: false,
-					error: {...e, message: e.response?.data.message!, statusCode: e.status, name: ''},
+					error: {...e, name: ''},
 				}
 			}
 			return {
@@ -118,7 +133,7 @@ export const authProvider: AuthProvider = {
 		} catch (e) {
 			if (isAxiosError(e)) {
 				return {
-					error: {...e, message: e.response?.data.message, name: ''},
+					error: {...e, name: ''},
 					logout: true,
 					authenticated: false,
 					redirectTo: '/login',
@@ -219,7 +234,7 @@ export const authProvider: AuthProvider = {
 		} catch (e) {
 			if (isAxiosError(e)) {
 				return {
-					error: {...e, message: e.response?.data.message, statusCode: e.status, name: ''},
+					error: {...e, name: ''},
 					success: false,
 				}
 			}

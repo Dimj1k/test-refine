@@ -3,21 +3,15 @@
 import {DeleteButton, Edit, ListButton, RefreshButton, SaveButton, useForm} from '@refinedev/antd'
 import {Link, useGetIdentity, useNotification} from '@refinedev/core'
 import {Breadcrumb, Form, Input, Result, Skeleton} from 'antd'
-import {IErrorResponce, IMessage, UserIdentity} from '@/providers/auth-provider/interfaces'
+import {IMessage, UserIdentity} from '@/providers/auth-provider/interfaces'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
-import {isAxiosError} from 'axios'
 import {IPostName} from '../../page'
 
 export default function PostEdit({params: {id: postId}}: {params: {id: string}}) {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
 	const {formProps, saveButtonProps, query} = useForm<IMessage>({
-		successNotification: data => {
-			if (isAxiosError<IErrorResponce>(data?.data)) {
-				return {message: data?.data.response?.data.message!, type: 'error'}
-			}
-			return {message: data?.data.message!, type: 'success'}
-		},
+		successNotification: data => ({message: data?.data.message!, type: 'success'}),
 		errorNotification: error => ({message: error?.message!, type: 'error'}),
 	})
 	const initialValues = formProps.initialValues as IPostName | undefined
@@ -75,6 +69,10 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 								successNotification={data => ({
 									message: (data as IMessage).message ?? 'Post deleted successfully',
 									type: 'success' as const,
+								})}
+								errorNotification={() => ({
+									message: 'Произошла ошибка при удалении поста',
+									type: 'error',
 								})}>
 								Удалить
 							</DeleteButton>

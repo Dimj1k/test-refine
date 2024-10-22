@@ -3,18 +3,12 @@
 import {Create, SaveButton, useForm} from '@refinedev/antd'
 import {Link, useGetIdentity} from '@refinedev/core'
 import {Breadcrumb, Form, Input, Result} from 'antd'
-import {IErrorResponce, IMessage, UserIdentity} from '@/providers/auth-provider/interfaces'
-import {isAxiosError} from 'axios'
+import {IMessage, UserIdentity} from '@/providers/auth-provider/interfaces'
 
 export default function PostCreate() {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
 	const {formProps, saveButtonProps} = useForm<IMessage>({
-		successNotification: data => {
-			if (isAxiosError<IErrorResponce>(data?.data)) {
-				return {message: data?.data.response?.data.message!, type: 'error'}
-			}
-			return {message: data?.data.message!, type: 'success'}
-		},
+		successNotification: data => ({message: data?.data.message!, type: 'success'}),
 		errorNotification: error => ({message: error?.message!, type: 'error'}),
 	})
 

@@ -81,6 +81,10 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 								successNotification={data => ({
 									message: (data as IMessage).message ?? 'Post deleted successfully',
 									type: 'success' as const,
+								})}
+								errorNotification={() => ({
+									message: 'Произошла ошибка при удалении поста',
+									type: 'error',
 								})}>
 								Удалить
 							</DeleteButton>

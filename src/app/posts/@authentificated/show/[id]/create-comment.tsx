@@ -1,8 +1,6 @@
 import {useCustomMutation, useInvalidate} from '@refinedev/core'
 import {Button, Form, Input} from 'antd'
-import {isAxiosError} from 'axios'
 import {memo} from 'react'
-import {IErrorResponce} from '@/providers/auth-provider/interfaces'
 
 export const CreateComment: React.FC<{token?: string; postId: number | string}> = memo(
 	({token, postId}) => {
@@ -19,12 +17,8 @@ export const CreateComment: React.FC<{token?: string; postId: number | string}> 
 							url: `posts/${postId}/comments`,
 							method: 'post',
 							config: {headers: {Authorization: token}},
-							successNotification: data => {
-								if (isAxiosError<IErrorResponce>(data?.data)) {
-									return {message: data?.data.response?.data.message!, type: 'error'}
-								}
-								return {message: data?.data.message!, type: 'success'}
-							},
+							successNotification: data => ({message: data?.data.message!, type: 'success'}),
+							errorNotification: error => ({message: error?.message!, type: 'error'}),
 							values,
 						},
 						{

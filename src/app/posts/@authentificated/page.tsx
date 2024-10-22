@@ -56,6 +56,10 @@ export default function PostsList() {
 											message: (data as IMessage).message ?? 'Post deleted successfully',
 											type: 'success' as const,
 										})}
+										errorNotification={() => ({
+											message: 'Произошла ошибка при удалении поста',
+											type: 'error',
+										})}
 									/>
 								</Space>
 							)

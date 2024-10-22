@@ -18,6 +18,7 @@
         "editError": "Изменение не произошло",
         "createSuccess": "Добавлено успешно",
         "deleteSuccess": "Удалено успешно",
-        "deleteError": "Ошибка"
+        "deleteError": "Ошибка",
+        "error": "Ошибка"
     }
 }

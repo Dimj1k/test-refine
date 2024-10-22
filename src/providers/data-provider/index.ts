@@ -2,7 +2,6 @@
 
 import {DataProvider} from '@refinedev/core'
 import {authProvider, axiosJson} from '../auth-provider'
-import {AxiosError} from 'axios'
 import {UserIdentity} from '../auth-provider/interfaces'
 
 type MethodTypes = 'get' | 'delete' | 'head' | 'options'
@@ -22,28 +21,36 @@ export function getApi(resource?: string): string {
 
 export const dataProvider: DataProvider = {
 	getList: async ({resource, pagination, meta}) => {
-		const {headers, method = 'get'} = meta || {}
-		const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
-		const reqMethod = method as MethodTypes
-		const {
-			data: {result: data},
-		} = await axiosJson[reqMethod](resource, {headers: {Authorization, ...headers}})
-		let [start, end]: (number | undefined)[] = [0, undefined]
-		if (pagination && pagination.current && pagination.pageSize) {
-			start = (pagination.current - 1) * pagination.pageSize
-			end = start + pagination.pageSize
+		try {
+			const {headers, method = 'get'} = meta || {}
+			const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
+			const reqMethod = method as MethodTypes
+			const {
+				data: {result: data},
+			} = await axiosJson[reqMethod](resource, {headers: {Authorization, ...headers}})
+			let [start, end]: (number | undefined)[] = [0, undefined]
+			if (pagination && pagination.current && pagination.pageSize) {
+				start = (pagination.current - 1) * pagination.pageSize
+				end = start + pagination.pageSize
+			}
+			const paginatedData = data.slice(start, end)
+			return {data: paginatedData, total: data.length}
+		} catch (e) {
+			return Promise.reject(e)
 		}
-		const paginatedData = data.slice(start, end)
-		return {data: paginatedData, total: data.length}
 	},
 	getOne: async ({resource, id, meta}) => {
-		const {headers, method = 'get'} = meta ?? {}
-		const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
-		const reqMethod = method as MethodTypes
-		const {
-			data: {result: data},
-		} = await axiosJson[reqMethod](resource + '/' + id, {headers: {Authorization, ...headers}})
-		return {data}
+		try {
+			const {headers, method = 'get'} = meta ?? {}
+			const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
+			const reqMethod = method as MethodTypes
+			const {
+				data: {result: data},
+			} = await axiosJson[reqMethod](resource + '/' + id, {headers: {Authorization, ...headers}})
+			return {data}
+		} catch (e) {
+			return Promise.reject(e)
+		}
 	},
 	create: async ({resource, variables, meta}) => {
 		const {headers, method = 'post'} = meta ?? {}
@@ -55,7 +62,7 @@ export const dataProvider: DataProvider = {
 			})
 			return {data}
 		} catch (e) {
-			return {data: e as AxiosError}
+			return Promise.reject(e)
 		}
 	},
 	update: async ({id, meta, resource, variables}) => {
@@ -68,7 +75,7 @@ export const dataProvider: DataProvider = {
 			})
 			return {data}
 		} catch (e) {
-			return {data: e as AxiosError}
+			return Promise.reject(e)
 		}
 	},
 	deleteOne: async ({id, meta, resource}) => {
@@ -81,7 +88,7 @@ export const dataProvider: DataProvider = {
 			})
 			return {data}
 		} catch (e) {
-			return {data: e as AxiosError}
+			return Promise.reject(e)
 		}
 	},
 	getApiUrl: () => {
@@ -96,7 +103,7 @@ export const dataProvider: DataProvider = {
 			const {data} = await axiosJson[method](resource, {headers})
 			return {data}
 		} catch (e) {
-			return {data: e as AxiosError}
+			return Promise.reject(e)
 		}
 	},
 }
