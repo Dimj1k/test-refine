@@ -4,10 +4,10 @@ import {DeleteButton, Edit, ListButton, RefreshButton, SaveButton, useForm} from
 import {Link, useGetIdentity, useNotification} from '@refinedev/core'
 import {Breadcrumb, Form, Input, Result, Skeleton} from 'antd'
 import {IErrorResponce, IMessage, UserIdentity} from '@/providers/auth-provider/interfaces'
-import {IPostName} from '../../page'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {isAxiosError} from 'axios'
+import {IPostName} from '../../page'
 
 export default function PostEdit({params: {id: postId}}: {params: {id: string}}) {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
@@ -71,7 +71,11 @@ export default function PostEdit({params: {id: postId}}: {params: {id: string}})
 								confirmTitle="Вы уверены?"
 								confirmOkText="Да"
 								confirmCancelText="Нет"
-								disabled={!isAuthor}>
+								disabled={!isAuthor}
+								successNotification={data => ({
+									message: (data as IMessage).message ?? 'Post deleted successfully',
+									type: 'success' as const,
+								})}>
 								Удалить
 							</DeleteButton>
 						)}

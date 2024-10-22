@@ -7,7 +7,7 @@ import {IPostName} from '../../page'
 import {CreateComment} from './create-comment'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
-import {UserIdentity} from '@/providers/auth-provider/interfaces'
+import {IMessage, UserIdentity} from '@/providers/auth-provider/interfaces'
 
 const {Title, Text} = Typography
 
@@ -77,7 +77,11 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 								{...deleteButtonProps}
 								confirmOkText="Да"
 								confirmCancelText="Нет"
-								confirmTitle="Вы уверены?">
+								confirmTitle="Вы уверены?"
+								successNotification={data => ({
+									message: (data as IMessage).message ?? 'Post deleted successfully',
+									type: 'success' as const,
+								})}>
 								Удалить
 							</DeleteButton>
 						)}

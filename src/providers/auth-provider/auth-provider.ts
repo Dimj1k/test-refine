@@ -118,7 +118,7 @@ export const authProvider: AuthProvider = {
 		} catch (e) {
 			if (isAxiosError(e)) {
 				return {
-					error: {...e, message: e.response?.data.message},
+					error: {...e, message: e.response?.data.message, name: ''},
 					logout: true,
 					authenticated: false,
 					redirectTo: '/login',
