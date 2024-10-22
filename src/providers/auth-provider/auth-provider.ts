@@ -48,6 +48,7 @@ export const authProvider: AuthProvider = {
 					sameSite: 'Lax',
 				})
 			} else {
+				Cookies.set('nr', '1', {path: '/'})
 				Cookies.set('auth', token, {
 					path: '/',
 					sameSite: 'Lax',
@@ -86,6 +87,7 @@ export const authProvider: AuthProvider = {
 			return {success: true, redirectTo: '/login'}
 		} finally {
 			Cookies.remove('auth', {path: '/'})
+			Cookies.remove('nr', {path: '/'})
 			globData.dataIndentity = null
 		}
 	},
@@ -133,6 +135,13 @@ export const authProvider: AuthProvider = {
 				if (globData.dataIndentity) {
 					return globData.dataIndentity
 				}
+				if (!Cookies.get('nr')) {
+					Cookies.set('auth', token, {
+						expires: 30, // 30 days
+						path: '/',
+						sameSite: 'Lax',
+					})
+				}
 				const res = await mutex.runExclusive(async () => {
 					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
 						headers: {
@@ -165,6 +174,15 @@ export const authProvider: AuthProvider = {
 		return {error}
 	},
 	register: async (values: IRegister) => {
+		if (Cookies.get('auth')) {
+			return {
+				success: true,
+				redirectTo: '/',
+				successNotification: {
+					message: 'Выйдите из текущего аккаунта, чтобы зарегистрировать нового пользователя',
+				},
+			}
+		}
 		try {
 			const {
 				data: {
