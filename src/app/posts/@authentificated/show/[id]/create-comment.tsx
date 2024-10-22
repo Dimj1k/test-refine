@@ -1,12 +1,13 @@
-import {useCustomMutation, useInvalidate, useNotification} from '@refinedev/core'
+import {useCustomMutation, useInvalidate} from '@refinedev/core'
 import {Button, Form, Input} from 'antd'
+import {isAxiosError} from 'axios'
 import {memo} from 'react'
+import {IErrorResponce} from '@/providers/auth-provider/interfaces'
 
 export const CreateComment: React.FC<{token?: string; postId: number | string}> = memo(
 	({token, postId}) => {
-		const {isLoading, mutate: sendComment} = useCustomMutation<ICommentSuccess>()
+		const {isLoading, mutateAsync: sendComment} = useCustomMutation<ICommentSuccess>()
 		const [form] = Form.useForm<{text: string}>()
-		const notification = useNotification()
 		const invalidate = useInvalidate()
 		return (
 			<Form
@@ -18,24 +19,18 @@ export const CreateComment: React.FC<{token?: string; postId: number | string}> 
 							url: `posts/${postId}/comments`,
 							method: 'post',
 							config: {headers: {Authorization: token}},
+							successNotification: data => {
+								if (isAxiosError<IErrorResponce>(data?.data)) {
+									return {message: data?.data.response?.data.message!, type: 'error'}
+								}
+								return {message: data?.data.message!, type: 'success'}
+							},
 							values,
 						},
 						{
 							onSuccess: () => {
 								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'}).then(() => {
 									form.resetFields()
-									notification.open?.({
-										message: 'Ваш комментарий успешно опубликован',
-										type: 'success',
-									})
-								})
-							},
-							onError: () => {
-								invalidate({invalidates: ['detail'], id: postId, resource: 'posts'}).then(() => {
-									notification.open?.({
-										message: 'Произошла ошибка при опубликованнии комменатария',
-										type: 'error',
-									})
 								})
 							},
 						},

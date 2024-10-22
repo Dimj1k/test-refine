@@ -3,6 +3,7 @@
 import {DeleteButton, EditButton, List, ShowButton, useTable} from '@refinedev/antd'
 import {usePermissions} from '@refinedev/core'
 import {Space, Table} from 'antd'
+import {IMessage} from '@/providers/auth-provider/interfaces'
 
 export default function PostsList() {
 	const {data: id} = usePermissions<number>()
@@ -51,6 +52,10 @@ export default function PostsList() {
 										confirmTitle="Вы уверены?"
 										confirmOkText="Да"
 										confirmCancelText="Нет"
+										successNotification={data => ({
+											message: (data as IMessage).message ?? 'Post deleted successfully',
+											type: 'success' as const,
+										})}
 									/>
 								</Space>
 							)

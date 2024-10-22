@@ -4,7 +4,7 @@ import type {AuthProvider} from '@refinedev/core'
 import axios, {isAxiosError} from 'axios'
 import Cookies from 'js-cookie'
 import {getApi} from '../data-provider'
-import {IAuthSuccessResponce, IRegister, UserIdentity} from './interfaces'
+import {IAuthSuccessResponce, IMessage, IRegister, UserIdentity} from './interfaces'
 import {Mutex} from 'async-mutex'
 
 export const axiosJson = axios.create({
@@ -61,6 +61,12 @@ export const authProvider: AuthProvider = {
 				successNotification: {message},
 			}
 		} catch (e) {
+			if (isAxiosError<IMessage>(e)) {
+				return {
+					success: false,
+					error: {...e, message: e.response?.data.message!, statusCode: e.status, name: ''},
+				}
+			}
 			return {
 				success: false,
 				error: e as Error,
@@ -84,7 +90,7 @@ export const authProvider: AuthProvider = {
 				successNotification: {message: data.message},
 			}
 		} catch (e) {
-			return {success: true, redirectTo: '/login'}
+			return {success: true, redirectTo: '/login', error: e as Error}
 		} finally {
 			Cookies.remove('auth', {path: '/'})
 			Cookies.remove('nr', {path: '/'})
@@ -110,6 +116,14 @@ export const authProvider: AuthProvider = {
 				authenticated: true,
 			}
 		} catch (e) {
+			if (isAxiosError(e)) {
+				return {
+					error: {...e, message: e.response?.data.message},
+					logout: true,
+					authenticated: false,
+					redirectTo: '/login',
+				}
+			}
 			return {
 				authenticated: false,
 				logout: true,
@@ -204,7 +218,10 @@ export const authProvider: AuthProvider = {
 			}
 		} catch (e) {
 			if (isAxiosError(e)) {
-				return {error: {...e, message: e.response?.data.message}, success: false}
+				return {
+					error: {...e, message: e.response?.data.message, statusCode: e.status, name: ''},
+					success: false,
+				}
 			}
 			return {error: e as Error, success: false}
 		}

@@ -109,7 +109,7 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 			{id ? (
 				<CreateComment postId={postId} token={userInfo?.auth} />
 			) : (
-				<Typography.Text>Войдите, чтобы оставлять комментарии</Typography.Text>
+				<Text>Войдите, чтобы оставлять комментарии</Text>
 			)}
 		</Show>
 	)

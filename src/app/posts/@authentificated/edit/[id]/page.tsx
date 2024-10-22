@@ -3,14 +3,23 @@
 import {DeleteButton, Edit, ListButton, RefreshButton, SaveButton, useForm} from '@refinedev/antd'
 import {Link, useGetIdentity, useNotification} from '@refinedev/core'
 import {Breadcrumb, Form, Input, Result, Skeleton} from 'antd'
-import {UserIdentity} from '@/providers/auth-provider/interfaces'
+import {IErrorResponce, IMessage, UserIdentity} from '@/providers/auth-provider/interfaces'
 import {IPostName} from '../../page'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
+import {isAxiosError} from 'axios'
 
 export default function PostEdit({params: {id: postId}}: {params: {id: string}}) {
 	const {data: userInfo} = useGetIdentity<UserIdentity>()
-	const {formProps, saveButtonProps, query} = useForm<IPostName>()
+	const {formProps, saveButtonProps, query} = useForm<IMessage>({
+		successNotification: data => {
+			if (isAxiosError<IErrorResponce>(data?.data)) {
+				return {message: data?.data.response?.data.message!, type: 'error'}
+			}
+			return {message: data?.data.message!, type: 'success'}
+		},
+		errorNotification: error => ({message: error?.message!, type: 'error'}),
+	})
 	const initialValues = formProps.initialValues as IPostName | undefined
 	const router = useRouter()
 	const notify = useNotification()

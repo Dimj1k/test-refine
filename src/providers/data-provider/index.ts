@@ -50,9 +50,9 @@ export const dataProvider: DataProvider = {
 		const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
 		const reqMethod = method as MethodTypesWithBody
 		try {
-			const {
-				data: {result: data},
-			} = await axiosJson[reqMethod](resource, variables, {headers: {Authorization, ...headers}})
+			const {data} = await axiosJson[reqMethod](resource, variables, {
+				headers: {Authorization, ...headers},
+			})
 			return {data}
 		} catch (e) {
 			return {data: e as AxiosError}
@@ -63,9 +63,7 @@ export const dataProvider: DataProvider = {
 		const {headers, method = 'put'} = meta ?? {}
 		const reqMethod = method as MethodTypesWithBody
 		try {
-			const {
-				data: {result: data},
-			} = await axiosJson[reqMethod](resource + '/' + id, variables, {
+			const {data} = await axiosJson[reqMethod](resource + '/' + id, variables, {
 				headers: {Authorization, ...headers},
 			})
 			return {data}
@@ -78,9 +76,9 @@ export const dataProvider: DataProvider = {
 		const {headers, method = 'delete'} = meta ?? {}
 		const reqMethod = method as MethodTypes
 		try {
-			const {
-				data: {result: data},
-			} = await axiosJson[reqMethod](resource + '/' + id, {headers: {Authorization, ...headers}})
+			const {data} = await axiosJson[reqMethod](resource + '/' + id, {
+				headers: {Authorization, ...headers},
+			})
 			return {data}
 		} catch (e) {
 			return {data: e as AxiosError}
@@ -92,14 +90,10 @@ export const dataProvider: DataProvider = {
 	custom: async ({url: resource, method = 'post', payload, headers}) => {
 		try {
 			if (arrayMethodTypesWithBody.some(v => v === method)) {
-				const {
-					data: {result: data},
-				} = await axiosJson[method](resource, payload ?? {}, {headers})
+				const {data} = await axiosJson[method](resource, payload ?? {}, {headers})
 				return {data}
 			}
-			const {
-				data: {result: data},
-			} = await axiosJson[method](resource, {headers})
+			const {data} = await axiosJson[method](resource, {headers})
 			return {data}
 		} catch (e) {
 			return {data: e as AxiosError}
