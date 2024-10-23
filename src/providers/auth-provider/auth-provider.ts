@@ -13,6 +13,7 @@ export const axiosJson = axios.create({
 	responseType: 'json',
 	timeout: 5000,
 })
+
 axiosJson.interceptors.response.use(
 	response => {
 		return response

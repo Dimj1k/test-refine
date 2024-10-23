@@ -7,6 +7,7 @@ import {AntdRegistry} from '@ant-design/nextjs-registry'
 import {ColorModeContextProvider} from '@contexts/color-mode'
 import '@refinedev/antd/dist/reset.css'
 import {RefineContext} from '@/providers/refine-context'
+import {IsOfflineMessage} from '@/components/is-online-message'
 
 export const metadata: Metadata = {
 	title: 'Refine',
@@ -30,6 +31,7 @@ export default function RootLayout({
 				<Suspense>
 					<AntdRegistry>
 						<ColorModeContextProvider defaultMode={defaultMode}>
+							<IsOfflineMessage />
 							<RefineContext>{children}</RefineContext>
 						</ColorModeContextProvider>
 					</AntdRegistry>
