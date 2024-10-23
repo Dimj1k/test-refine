@@ -162,15 +162,15 @@ export const authProvider: AuthProvider = {
 			const token =
 				auth !== 'guest' ? auth : 'Bearer 163|I6etNbJQAJF7cnJmHrHMH0tOZGlySs73Gfp3w1E68ee70ce6'
 			try {
-				if (globData.dataIndentity) {
-					return globData.dataIndentity
-				}
 				if (!Cookies.get('nr')) {
 					Cookies.set('auth', token, {
 						expires: 30, // 30 days
 						path: '/',
 						sameSite: 'Lax',
 					})
+				}
+				if (globData.dataIndentity) {
+					return globData.dataIndentity
 				}
 				const res = await mutex.runExclusive(async () => {
 					const {data} = await axiosJson.get<{result: {id: number; name: string}}>('me', {
