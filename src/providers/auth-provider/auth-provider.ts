@@ -162,7 +162,7 @@ export const authProvider: AuthProvider = {
 			const token =
 				auth !== 'guest' ? auth : 'Bearer 163|I6etNbJQAJF7cnJmHrHMH0tOZGlySs73Gfp3w1E68ee70ce6'
 			try {
-				if (!Cookies.get('nr')) {
+				if (!Cookies.get('nr') && auth !== 'guest') {
 					Cookies.set('auth', token, {
 						expires: 30, // 30 days
 						path: '/',
