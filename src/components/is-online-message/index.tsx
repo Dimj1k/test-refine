@@ -17,18 +17,6 @@ export const IsOfflineMessage: React.FC = () => {
 	const key = useId()
 
 	useEffect(() => {
-		if (window) {
-			const oldConsoleError = console.error.bind(window)
-			console.error = (...args) => {
-				if (isHttpError(args[0])) {
-					return null
-				}
-				return oldConsoleError(...args)
-			}
-		}
-	}, [])
-
-	useEffect(() => {
 		if (!isOnline) {
 			messageApi.error({
 				content: 'Вы отключились от сети',
