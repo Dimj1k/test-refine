@@ -4,7 +4,7 @@ import {memo} from 'react'
 
 export const CreateComment: React.FC<{token?: string; postId: number | string}> = memo(
 	({token, postId}) => {
-		const {isLoading, mutateAsync: sendComment} = useCustomMutation<ICommentSuccess>()
+		const {isLoading, mutate: sendComment} = useCustomMutation<ICommentSuccess>()
 		const [form] = Form.useForm<{text: string}>()
 		const invalidate = useInvalidate()
 		return (

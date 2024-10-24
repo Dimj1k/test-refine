@@ -2,14 +2,6 @@
 import {message} from 'antd'
 import {useOnline} from './use-online'
 import {useEffect, useId} from 'react'
-import type {AxiosError} from 'axios'
-
-function isHttpError(data: unknown): data is AxiosError {
-	if (!data) {
-		return false
-	}
-	return typeof data === 'object' && 'status' in data && 'request' in data && 'response' in data
-}
 
 export const IsOfflineMessage: React.FC = () => {
 	const isOnline = useOnline()
