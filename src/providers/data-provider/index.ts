@@ -28,13 +28,7 @@ export const dataProvider: DataProvider = {
 			const {
 				data: {result: data},
 			} = await axiosJson[reqMethod](resource, {headers: {Authorization, ...headers}})
-			let [start, end]: (number | undefined)[] = [0, undefined]
-			if (pagination && pagination.current && pagination.pageSize) {
-				start = (pagination.current - 1) * pagination.pageSize
-				end = start + pagination.pageSize
-			}
-			const paginatedData = data.slice(start, end)
-			return {data: paginatedData, total: data.length}
+			return {data, total: data.length}
 		} catch (e) {
 			return Promise.reject(e)
 		}
