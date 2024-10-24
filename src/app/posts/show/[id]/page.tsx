@@ -3,11 +3,11 @@
 import {DeleteButton, EditButton, ListButton, RefreshButton, Show, TextField} from '@refinedev/antd'
 import {Link, useGetIdentity, usePermissions, useShow} from '@refinedev/core'
 import {Breadcrumb, Divider, Typography} from 'antd'
-import {IPostName} from '../../page'
 import {CreateComment} from './create-comment'
 import {useEffect} from 'react'
 import {useRouter} from 'next/navigation'
 import {IMessage, UserIdentity} from '@/providers/auth-provider/interfaces'
+import {IPostName} from '../../page'
 
 const {Title, Text} = Typography
 
