@@ -14,7 +14,7 @@ export interface IAuthSuccessResponce extends IMessage {
 }
 
 export interface IErrorResponce extends IMessage {
-	errors: {property_name: string}[]
+	errors: Record<string, string>
 }
 
 export type UserIdentity = {

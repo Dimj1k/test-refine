@@ -20,84 +20,60 @@ export function getApi(resource?: string): string {
 }
 
 export const dataProvider: DataProvider = {
-	getList: async ({resource, pagination, meta}) => {
-		try {
-			const {headers, method = 'get'} = meta || {}
-			const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
-			const reqMethod = method as MethodTypes
-			const {
-				data: {result: data},
-			} = await axiosJson[reqMethod](resource, {headers: {Authorization, ...headers}})
-			return {data, total: data.length}
-		} catch (e) {
-			return Promise.reject(e)
-		}
+	getList: async ({resource, meta}) => {
+		const {headers, method = 'get'} = meta || {}
+		const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
+		const reqMethod = method as MethodTypes
+		const {
+			data: {result: data},
+		} = await axiosJson[reqMethod](resource, {headers: {Authorization, ...headers}})
+		return {data, total: data.length}
 	},
 	getOne: async ({resource, id, meta}) => {
-		try {
-			const {headers, method = 'get'} = meta ?? {}
-			const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
-			const reqMethod = method as MethodTypes
-			const {
-				data: {result: data},
-			} = await axiosJson[reqMethod](resource + '/' + id, {headers: {Authorization, ...headers}})
-			return {data}
-		} catch (e) {
-			return Promise.reject(e)
-		}
+		const {headers, method = 'get'} = meta ?? {}
+		const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
+		const reqMethod = method as MethodTypes
+		const {
+			data: {result: data},
+		} = await axiosJson[reqMethod](resource + '/' + id, {headers: {Authorization, ...headers}})
+		return {data}
 	},
 	create: async ({resource, variables, meta}) => {
 		const {headers, method = 'post'} = meta ?? {}
 		const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
 		const reqMethod = method as MethodTypesWithBody
-		try {
-			const {data} = await axiosJson[reqMethod](resource, variables, {
-				headers: {Authorization, ...headers},
-			})
-			return {data}
-		} catch (e) {
-			return Promise.reject(e)
-		}
+		const {data} = await axiosJson[reqMethod](resource, variables, {
+			headers: {Authorization, ...headers},
+		})
+		return {data}
 	},
 	update: async ({id, meta, resource, variables}) => {
 		const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
 		const {headers, method = 'put'} = meta ?? {}
 		const reqMethod = method as MethodTypesWithBody
-		try {
-			const {data} = await axiosJson[reqMethod](resource + '/' + id, variables, {
-				headers: {Authorization, ...headers},
-			})
-			return {data}
-		} catch (e) {
-			return Promise.reject(e)
-		}
+		const {data} = await axiosJson[reqMethod](resource + '/' + id, variables, {
+			headers: {Authorization, ...headers},
+		})
+		return {data}
 	},
 	deleteOne: async ({id, meta, resource}) => {
 		const Authorization = ((await authProvider.getIdentity?.()) as UserIdentity)?.auth
 		const {headers, method = 'delete'} = meta ?? {}
 		const reqMethod = method as MethodTypes
-		try {
-			const {data} = await axiosJson[reqMethod](resource + '/' + id, {
-				headers: {Authorization, ...headers},
-			})
-			return {data}
-		} catch (e) {
-			return Promise.reject(e)
-		}
+		const {data} = await axiosJson[reqMethod](resource + '/' + id, {
+			headers: {Authorization, ...headers},
+		})
+		return {data}
 	},
 	getApiUrl: () => {
 		return getApi()
 	},
 	custom: async ({url: resource, method = 'post', payload, headers}) => {
-		try {
-			if (arrayMethodTypesWithBody.some(v => v === method)) {
-				const {data} = await axiosJson[method](resource, payload ?? {}, {headers})
-				return {data}
-			}
-			const {data} = await axiosJson[method](resource, {headers})
+		if (arrayMethodTypesWithBody.some(v => v === method)) {
+			const {data} = await axiosJson[method](resource, payload ?? {}, {headers})
 			return {data}
-		} catch (e) {
-			return Promise.reject(e)
 		}
+		const {data} = await axiosJson[method](resource, {headers})
+		return {data}
 	},
 }

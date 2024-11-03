@@ -1,7 +1,7 @@
 'use client'
 
 import {DeleteButton, EditButton, ListButton, RefreshButton, Show, TextField} from '@refinedev/antd'
-import {Link, useGetIdentity, usePermissions, useShow} from '@refinedev/core'
+import {CanAccess, Link, useGetIdentity, usePermissions, useShow} from '@refinedev/core'
 import {Breadcrumb, Divider, Typography} from 'antd'
 import {CreateComment} from './create-comment'
 import {useEffect} from 'react'
@@ -114,11 +114,9 @@ export default function PostShow({params: {id: postId}}: {params: {id: string}})
 					</div>
 				)
 			})}
-			{id ? (
+			<CanAccess action="comment" fallback={<Text>Войдите, чтобы оставлять комментарии</Text>}>
 				<CreateComment postId={postId} token={userInfo?.auth} />
-			) : (
-				<Text>Войдите, чтобы оставлять комментарии</Text>
-			)}
+			</CanAccess>
 		</Show>
 	)
 }

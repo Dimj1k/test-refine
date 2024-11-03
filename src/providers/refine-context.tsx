@@ -11,6 +11,7 @@ import {authProvider} from './auth-provider'
 import {DevtoolsProvider} from '@refinedev/devtools'
 import {useTranslation} from 'next-i18next'
 import './i18n-provider'
+import {accessControlProvider} from './access-control-provider'
 
 export const RefineContext: React.FC<PropsWithChildren> = ({children}) => {
 	const {t, i18n} = useTranslation()
@@ -25,6 +26,7 @@ export const RefineContext: React.FC<PropsWithChildren> = ({children}) => {
 		<RefineKbarProvider>
 			<DevtoolsProvider>
 				<Refine
+					accessControlProvider={accessControlProvider}
 					i18nProvider={i18nProvider}
 					routerProvider={routerProvider}
 					dataProvider={dataProvider}
@@ -46,7 +48,6 @@ export const RefineContext: React.FC<PropsWithChildren> = ({children}) => {
 					]}
 					options={{
 						warnWhenUnsavedChanges: true,
-						useNewQueryKeys: true,
 						projectId: 'fGVDEF-tC5vtr-68GdlO',
 						title: {text: 'Refine Project', icon: <AppIcon />},
 					}}>

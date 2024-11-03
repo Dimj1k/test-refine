@@ -1,15 +1,14 @@
 'use client'
 
 import {DeleteButton, EditButton, List, ShowButton, useTable} from '@refinedev/antd'
-import {usePermissions} from '@refinedev/core'
+import {CanAccess} from '@refinedev/core'
 import {Space, Table} from 'antd'
 import {IMessage} from '@/providers/auth-provider/interfaces'
 
 export default function PostsList() {
-	const {data: id} = usePermissions<number>()
 	const {tableProps} = useTable<IPostTitle>({})
 	return (
-		<List createButtonProps={{children: 'Создать'}} canCreate={!!id}>
+		<List createButtonProps={{children: 'Создать'}}>
 			<Table<IPostTitle> {...tableProps} rowKey="id">
 				<Table.Column dataIndex="id" title={'Идентификатор'} width={'12%'} />
 				<Table.Column dataIndex="name" title={'Название'} />
@@ -39,8 +38,16 @@ export default function PostsList() {
 							id: recordId,
 							author: {id: authorId},
 						} = record
-						if (authorId === id) {
-							return (
+						return (
+							<CanAccess
+								action="author"
+								resource="posts"
+								params={{authorId}}
+								fallback={
+									<ShowButton size="middle" recordItemId={recordId}>
+										Показать
+									</ShowButton>
+								}>
 								<Space>
 									<EditButton hideText size="small" recordItemId={recordId} />
 									<ShowButton hideText size="small" recordItemId={recordId} />
@@ -62,12 +69,7 @@ export default function PostsList() {
 										})}
 									/>
 								</Space>
-							)
-						}
-						return (
-							<ShowButton size="middle" recordItemId={recordId}>
-								Показать
-							</ShowButton>
+							</CanAccess>
 						)
 					}}
 					width={'10%'}
